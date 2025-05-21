@@ -203,15 +203,46 @@ ll solve_brute_example(int n)
 #endif
 
 // ───────────────── SOLVE FUNCTION ──────────────────────
-//  Your main code lives here. Insert brute/ASSERT/TRACE as needed.
-//  For contest problems, write clean solution, then wrap brute checks in PRACTICE blocks.
+//  Your main code lives here.
+//  This function handles a single test case: reads input, computes, and prints output.
 void solve()
 {
+    // --- Example: Read input for a single test case ---
+    int n_val;
+    read(n_val); // Read the actual 'n' for this test case
 
+    // --- Example: Compute answer for a single test case ---
+    ll current_ans = 0;
+    // TODO: Replace this with actual problem logic based on n_val and other inputs.
+    // For this example, let's assume the task is to sum numbers from 1 to n_val,
+    // matching the current solve_brute_example.
+    cf(i, 1, n_val)
+    {
+        current_ans += i;
+    }
+
+    // --- PRACTICE Block: Compare with brute-force solution ---
 #ifdef PRACTICE
-    ll ref = solve_brute_example(n);
-    ASSERT(ans == ref, "mismatch with brute");
+    ll ref_ans = solve_brute_example(n_val); // Pass the n_val read for this test case
+    if (current_ans != ref_ans)
+    {
+        // If LOCAL is also defined, TRACE will print detailed variable states.
+        TRACE("ASSERTION FAILED: Mismatch with brute force solution.");
+        TRACE("Input (n_val):", n_val);
+        TRACE("Your Answer (current_ans):", current_ans);
+        TRACE("Brute Force Answer (ref_ans):", ref_ans);
+        // The ASSERT macro will then print its message and exit.
+        ASSERT(current_ans == ref_ans, "Solution mismatch with brute force. See TRACE for details if LOCAL is defined.");
+    }
+    else
+    {
+        // Optional: Trace success for practice mode if LOCAL is on
+        TRACE("PRACTICE: Brute force check passed for n_val:", n_val, "ans:", current_ans);
+    }
 #endif
+
+    // --- Example: Print output for a single test case ---
+    print(current_ans);
 }
 
 // ────────────────────── MAIN ───────────────────────────
@@ -242,6 +273,13 @@ HOW TO USE THIS TEMPLATE
 
 **For contest/online judge (clean, fast):**
     g++ -std=c++20 -O2 -Wall main.cpp -o submit
+
+**Using with Competitive Programming Helper (CPH) like extensions:**
+    This template is designed to be compatible with CPH. CPH typically
+    identifies the `solve()` function and runs it for each test case.
+    Ensure your logic within `solve()` handles a single test case
+    (reads input, computes, prints output). The `main()` function in this
+    template is for standalone execution or use with `test.sh`.
 
 ─────────────────────────────────────────────────────────────
 Features:
