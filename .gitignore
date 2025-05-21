@@ -1,1 +1,10 @@
 .vscode
+*.exe
+*.o
+*.obj
+output.txt
+brute_output.txt
+input.txt
+__pycache__/
+*.pyc
+*.pyo
