@@ -322,23 +322,23 @@ void solve(int test_case_num) // Added test_case_num parameter
     // read(a);      // Example: if vector input is needed
 
     // --- Example: Compute answer for a single test case ---
-    ll current_ans = 0; // Placeholder for actual answer
     // TODO: Replace this with actual problem logic.
     // For example:
-    // if (n_val > 0 && a[0] == 1) current_ans = 1; else current_ans = 0;
+    // if (n_val > 0 && a[0] == 1) /* current_ans = 1; else current_ans = 0; */ // Usage of current_ans commented out/removed
 
     // --- PRACTICE Block: Compare with brute-force solution ---
 #ifdef PRACTICE
     // TODO: Adjust the input to solve_brute_example if necessary
     // ll ref_ans = solve_brute_example(n_val /*, a if needed */);
-    // if (current_ans != ref_ans)
+    // ll actual_solution_ans = 0; // Replace with your actual solution variable
+    // if (actual_solution_ans != ref_ans)
     // {
     //     TRACE("ASSERTION FAILED (Test Case #", test_case_num, "): Mismatch with brute force solution.");
     //     TRACE("Input (n_val):", n_val);
     //     // TRACE("Vector a:", a); // If using vector 'a'
-    //     TRACE("Your Answer (current_ans):", current_ans);
+    //     TRACE("Your Answer (actual_solution_ans):", actual_solution_ans);
     //     TRACE("Brute Force Answer (ref_ans):", ref_ans);
-    //     ASSERT(current_ans == ref_ans, "Solution mismatch with brute force.");
+    //     ASSERT(actual_solution_ans == ref_ans, "Solution mismatch with brute force.");
     // }
     // else
     // {
@@ -346,12 +346,12 @@ void solve(int test_case_num) // Added test_case_num parameter
     //               << ":" << std::source_location::current().line()
     //               << " (" << std::source_location::current().function_name() << ") "
     //               << BLUE << "DEBUG: " << RESET
-    //               << GREEN << "PRACTICE (Test Case #" << test_case_num << "): Brute force check passed for n_val: " << n_val << " ans: " << current_ans << RESET << std::endl;
+    //               << GREEN << "PRACTICE (Test Case #" << test_case_num << "): Brute force check passed for n_val: " << n_val << " ans: " << actual_solution_ans << RESET << std::endl;
     // }
 #endif
 
     // --- Example: Print output for a single test case ---
-    // print(current_ans); // Or YES/NO based on current_ans
+    // print(actual_solution_ans); // Or YES/NO based on actual_solution_ans
     // TODO: Print the computed answer, e.g., `print(result);` or `YES;`/`NO;`
 }
 
