@@ -224,7 +224,10 @@ template <typename T, typename... Args>
 void read(T &first, Args &...args)
 {
     cin >> first;
-    read(args...);
+    if constexpr (sizeof...(args) > 0)
+    {
+        read(args...);
+    }
 } // Variadic read
 template <typename T>
 void read(vector<T> &v)
@@ -270,9 +273,10 @@ void solve()
     int n_val;
     read(n_val);                                   // Read the actual 'n' for this test case
     TRACE("Inside solve function, n_val:", n_val); // Added TRACE call
-
+    vll a(n_val);
+    read(a);
     // --- Example: Compute answer for a single test case ---
-    ll current_ans = 0;
+    // ll current_ans = 0;
     // TODO: Replace this with actual problem logic based on n_val and other inputs.
     // For this example, let's assume the task is to sum numbers from 1 to n_val,  // Example comment
     // matching the current solve_brute_example.                                  // Example comment
@@ -305,6 +309,7 @@ void solve()
     // --- Example: Print output for a single test case ---
     // print(current_ans);
     // TODO: Print the computed answer, e.g., `print(result);`
+    YES;
 }
 
 // ────────────────────── MAIN ───────────────────────────
