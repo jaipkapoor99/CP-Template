@@ -12,7 +12,8 @@
 */
 
 #include <bits/stdc++.h>
-#include <bits/extc++.h>
+#include <ext/pb_ds/assoc_container.hpp> // For PBDS
+#include <ext/pb_ds/tree_policy.hpp>     // For PBDS
 #include <ranges>
 #include <bit>
 #include <numbers>
