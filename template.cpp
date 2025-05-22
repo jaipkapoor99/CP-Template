@@ -16,7 +16,6 @@
 #include <ext/pb_ds/tree_policy.hpp>     // For PBDS
 #include <ranges>
 #include <bit>
-#include <numbers>
 #include <span>
 #include <chrono>
 #include <random>
@@ -59,7 +58,14 @@ constexpr int MOD1 = 998'244'353;
 constexpr char SPACE = ' ';
 constexpr char NL = '\n';
 constexpr double EPS = 1e-9;
+
+#if __cplusplus >= 202002L && defined(__cpp_lib_numbers)
+#include <numbers> // Conditionally include <numbers>
 constexpr double PI = std::numbers::pi;
+#else
+constexpr double PI = 3.14159265358979323846; // Fallback for PI with a literal
+#endif
+
 constexpr ll INF = 1e18;
 constexpr int INF32 = 1e9;
 
@@ -309,7 +315,6 @@ void solve()
     // --- Example: Print output for a single test case ---
     // print(current_ans);
     // TODO: Print the computed answer, e.g., `print(result);`
-    YES;
 }
 
 // ────────────────────── MAIN ───────────────────────────

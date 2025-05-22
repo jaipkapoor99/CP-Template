@@ -190,6 +190,7 @@ As you get more comfortable, explore these:
 - **Modular Arithmetic (`ModularOps` struct, Lines 61-99):**
   - For problems involving large numbers where you need results modulo a specific number (e.g., `10^9 + 7`).
   - Usage: `Mint::add(a,b)`, `Mint::power(base, exp)`. `Mint` uses the default `MOD`.
+  - The `<numbers>` header for `std::numbers::pi` is included conditionally for C++20 and later. A fallback `acos(-1.0L)` is used otherwise.
 - **Macros (Lines 110-127):**
   - `f(i, s, e)`: for loop.
   - `all(v)`: gets iterators for a whole vector (e.g., `sort(all(my_vector))`).
