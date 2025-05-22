@@ -20,6 +20,7 @@
 #include <chrono>
 #include <random>
 #include <source_location>
+#include <filesystem> // Added for std::filesystem::path in DEBUG macro
 using namespace std;
 using namespace __gnu_pbds;
 
@@ -174,11 +175,18 @@ using Mint1 = ModularOps<MOD1>; // For 998244353
 // ────────────── DEBUGGING (Color + Context) ────────────
 //  Use DEBUG(a,b,v) to print state with file/line, colored, local only.
 #ifdef LOCAL
-#define RESET "\\033[0m"  // Corrected: single backslash
-#define RED "\\033[31m"   // Corrected: single backslash
-#define BLUE "\\033[34m"  // Corrected: single backslash
-#define GREEN "\\033[32m" // Added for success messages
+#define RESET "\\033[0m"
+#define RED "\\033[31m"
+#define BLUE "\\033[34m"
+#define GREEN "\\033[32m"
+#else // LOCAL
+#define RESET ""
+#define RED ""
+#define BLUE ""
+#define GREEN ""
+#endif // LOCAL
 
+#ifdef LOCAL
 // Helper for dbg to print pairs
 template <typename A, typename B>
 ostream &operator<<(ostream &os, const pair<A, B> &p)
@@ -263,14 +271,23 @@ void read(vector<T> &v)
     for (T &x : v)
         cin >> x;
 }
-template <typename T>
-void print(const T &x) { cout << x << NL; } // Added generic print
+
+// Refactored variadic print function
 template <typename T, typename... Args>
 void print(const T &first, const Args &...args)
 {
-    cout << first << SPACE;
-    print(args...);
-} // Variadic print
+    cout << first;
+    if constexpr (sizeof...(args) > 0)
+    {
+        cout << SPACE;
+        print(args...); // Recursive call for remaining arguments
+    }
+    else
+    {
+        cout << NL; // Base case: last argument (or only argument), print newline
+    }
+}
+
 template <typename T>
 void printv(const vector<T> &v)
 {
