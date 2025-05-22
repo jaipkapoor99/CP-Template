@@ -146,7 +146,6 @@ using Mint1 = ModularOps<MOD1>; // For 998244353
 #define se second
 #define YES cout << "YES" << NL
 #define NO cout << "NO" << NL
-#define endl NL
 #define UNIQUE(v) sort(all(v)), v.erase(unique(all(v)), v.end())
 #define forV(v) for (auto &e : (v))
 #define forM(m) for (auto &[key, value] : (m))
@@ -175,16 +174,10 @@ using Mint1 = ModularOps<MOD1>; // For 998244353
 // ────────────── DEBUGGING (Color + Context) ────────────
 //  Use DEBUG(a,b,v) to print state with file/line, colored, local only.
 #ifdef LOCAL
-#define RESET "\033[0m"
-#define RED "\033[31m"
-#define BLUE "\033[34m"
-template <typename... Args>
-void dbg(const std::source_location loc, Args &&...args)
-{
-    cerr << BLUE << "[" << loc.file_name() << ':' << loc.line() << "] " << RESET;
-    ((cerr << RED << args << RESET << " | "), ...);
-    cerr << NL;
-}
+#define RESET "\\033[0m"  // Corrected: single backslash
+#define RED "\\033[31m"   // Corrected: single backslash
+#define BLUE "\\033[34m"  // Corrected: single backslash
+#define GREEN "\\033[32m" // Added for success messages
 
 // Helper for dbg to print pairs
 template <typename A, typename B>
@@ -202,6 +195,35 @@ ostream &operator<<(ostream &os, const T_container &v)
     for (const T &x : v)
         os << sep << x, sep = ", ";
     return os << '}';
+}
+
+// Recursive helper to print variadic arguments for dbg
+template <typename T_arg, typename... Other_Args>
+void _dbg_print_recursive(std::ostream &os, T_arg &&first, Other_Args &&...rest)
+{
+    os << std::forward<T_arg>(first);
+    if constexpr (sizeof...(rest) > 0)
+    {
+        os << " "; // Add space before the next argument
+        _dbg_print_recursive(os, std::forward<Other_Args>(rest)...);
+    }
+}
+
+template <typename... Args>
+void dbg(const std::source_location loc, Args &&...args)
+{
+    // Using std::filesystem::path for filename only.
+    // Ensure <filesystem> is included (usually via <bits/stdc++.h> in C++20).
+    // If this causes issues, it can be reverted to loc.file_name().
+    std::cerr << RED << std::filesystem::path(loc.file_name()).filename().string()
+              << ":" << loc.line()
+              << " (" << loc.function_name() << ") "
+              << BLUE << "DEBUG: " << RESET;
+    if constexpr (sizeof...(args) > 0)
+    {
+        _dbg_print_recursive(std::cerr, std::forward<Args>(args)...);
+    }
+    std::cerr << RESET << std::endl; // Use std::endl for flushing and newline
 }
 
 #define DEBUG(...) dbg(std::source_location::current(), __VA_ARGS__)
@@ -260,12 +282,12 @@ void printv(const vector<T> &v)
 // ────────────── EXAMPLE BRUTE SOLVER (edit per task) ──────────────
 //  Only enabled in PRACTICE builds, never contest.
 #ifdef PRACTICE
-ll solve_brute_example(int n)
+ll solve_brute_example(int n_param /*, const vll& a_param if needed */) // Example signature
 {
     // Replace with your own O(N^3)/brute solution.
     // TODO: Implement your brute-force logic here.
     ll ans = 0;
-    // cf(i, 1, n) ans += i; // Example logic commented out
+    // Example: cf(i, 1, n_param) ans += i;
     return ans;
 }
 #endif
@@ -273,48 +295,47 @@ ll solve_brute_example(int n)
 // ───────────────── SOLVE FUNCTION ──────────────────────
 //  Your main code lives here.
 //  This function handles a single test case: reads input, computes, and prints output
-void solve()
+void solve(int test_case_num) // Added test_case_num parameter
 {
     // --- Example: Read input for a single test case ---
     int n_val;
-    read(n_val);                                   // Read the actual 'n' for this test case
-    TRACE("Inside solve function, n_val:", n_val); // Added TRACE call
-    vll a(n_val);
-    read(a);
+    read(n_val);
+    // TRACE("Test Case #", test_case_num, "Input n_val:", n_val); // Example TRACE
+    // vll a(n_val); // Example: if vector input is needed
+    // read(a);      // Example: if vector input is needed
+
     // --- Example: Compute answer for a single test case ---
-    // ll current_ans = 0;
-    // TODO: Replace this with actual problem logic based on n_val and other inputs.
-    // For this example, let's assume the task is to sum numbers from 1 to n_val,  // Example comment
-    // matching the current solve_brute_example.                                  // Example comment
-    // cf(i, 1, n_val) // Example logic commented out
-    // {               // Example logic commented out
-    //     current_ans += i; // Example logic commented out
-    // }               // Example logic commented out
+    ll current_ans = 0; // Placeholder for actual answer
+    // TODO: Replace this with actual problem logic.
+    // For example:
+    // if (n_val > 0 && a[0] == 1) current_ans = 1; else current_ans = 0;
 
     // --- PRACTICE Block: Compare with brute-force solution ---
 #ifdef PRACTICE
     // TODO: Adjust the input to solve_brute_example if necessary
-    // ll ref_ans = solve_brute_example(n_val); // Pass the n_val read for this test case
+    // ll ref_ans = solve_brute_example(n_val /*, a if needed */);
     // if (current_ans != ref_ans)
     // {
-    //     // If LOCAL is also defined, TRACE will print detailed variable states.
-    //     TRACE("ASSERTION FAILED: Mismatch with brute force solution.");
-    //     // TRACE("Input (n_val):", n_val);
-    //     // TRACE("Your Answer (current_ans):", current_ans);
-    //     // TRACE("Brute Force Answer (ref_ans):", ref_ans);
-    //     // The ASSERT macro will then print its message and exit.
-    //     ASSERT(current_ans == ref_ans, "Solution mismatch with brute force. See TRACE for details if LOCAL is defined.");
+    //     TRACE("ASSERTION FAILED (Test Case #", test_case_num, "): Mismatch with brute force solution.");
+    //     TRACE("Input (n_val):", n_val);
+    //     // TRACE("Vector a:", a); // If using vector 'a'
+    //     TRACE("Your Answer (current_ans):", current_ans);
+    //     TRACE("Brute Force Answer (ref_ans):", ref_ans);
+    //     ASSERT(current_ans == ref_ans, "Solution mismatch with brute force.");
     // }
     // else
     // {
-    //     // Optional: Trace success for practice mode if LOCAL is on
-    //     // TRACE("PRACTICE: Brute force check passed for n_val:", n_val, "ans:", current_ans);
+    //     std::cerr << GREEN << std::filesystem::path(std::source_location::current().file_name()).filename().string()
+    //               << ":" << std::source_location::current().line()
+    //               << " (" << std::source_location::current().function_name() << ") "
+    //               << BLUE << "DEBUG: " << RESET
+    //               << GREEN << "PRACTICE (Test Case #" << test_case_num << "): Brute force check passed for n_val: " << n_val << " ans: " << current_ans << RESET << std::endl;
     // }
 #endif
 
     // --- Example: Print output for a single test case ---
-    // print(current_ans);
-    // TODO: Print the computed answer, e.g., `print(result);`
+    // print(current_ans); // Or YES/NO based on current_ans
+    // TODO: Print the computed answer, e.g., `print(result);` or `YES;`/`NO;`
 }
 
 // ────────────────────── MAIN ───────────────────────────
@@ -324,8 +345,8 @@ int main()
     int t;
     read(t); // Always read the number of test cases
 
-    while (t--)
-        solve();
+    for (int i = 1; i <= t; ++i) // Loop from 1 to t to get test case number
+        solve(i);                // Pass current test case number
     return 0;
 }
 
