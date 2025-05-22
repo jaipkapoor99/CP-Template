@@ -1,242 +1,237 @@
-# CP-Template
+# Universal C++20 Competitive Programming Template: A Beginner's Guide
 
-A **grandmaster-level C++20 Competitive Programming Template** designed for speed, efficiency, and versatility. This template incorporates modern C++20 features, advanced debugging tools, fast I/O, randomization, modular arithmetic helpers, and much more.
+Welcome to the world of competitive programming (CP)! This guide will walk you through using this C++20 template, even if you're just starting out.
 
----
+## What is Competitive Programming?
 
-## 🚀 Features
+Competitive programming is a mind sport where participants solve algorithmic puzzles and coding problems within a time limit. Problems often require knowledge of data structures (like arrays, lists, trees) and algorithms (like sorting, searching, graph traversal).
 
-- **C++20 Ready:** Uses the latest language features for concise and powerful code.
-- **Fast Input/Output:** Macros and settings for lightning-fast I/O.
-- **Rich Type Aliases:** Shortcuts for common data structures (vectors, pairs, maps, etc.).
-- **Advanced Macros:** For iteration, container manipulation, and readability.
-- **Powerful Debugging:** Local-only, source-aware, colorized, and non-intrusive debug macros.
-- **Modern STL Utilities:** Ranges, spans, bit-manipulation helpers, and more.
-- **Random Number Generator:** Secure and fast for randomized algorithms.
-- **Policy-Based Data Structures:** Order-statistics set/map via GNU PBDS.
-- **Safe Hashing:** Custom hash for unordered containers to avoid collisions.
-- **Modular Arithmetic Helpers:** Fast, reusable modint class for mod calculations.
-- **Timer Utility:** For quick performance profiling.
-- **Flexible Input/Output:** Variadic read/print, tuple and span support.
-- **Ready for Expansion:** Easily add your own snippets and helpers.
+## What is This Template For?
 
----
+This `template.cpp` file is a starting point for your C++ solutions. It's packed with helpful tools and shortcuts commonly used in CP to help you code faster and more efficiently. Think of it as a well-equipped toolbox for a craftsman.
 
-## 🛠️ How to Use
+## Getting Started: Your First Problem
 
-1. **Copy** `template.cpp` into your contest workspace.
-2. **Compile** with C++20 support (e.g. `g++ -std=c++20 -O2 template.cpp -o solution`).
-3. **Enable Debugging (Optional):**  
-   Locally debug with advanced output by compiling with `-DLOCAL`:
-   ```
-   g++ -std=c++20 -O2 -DLOCAL template.cpp -o solution
-   ```
-4. **Start Coding:**  
-   Use the built-in aliases, macros, and helpers. See the template’s comments for usage examples.
+Let's imagine you're solving your first problem: "Read two numbers and print their sum."
 
----
+### 1. Understanding the Files
 
-## 📦 Main Components
+- **`template.cpp`**: This is your main C++ code file. You'll write your solution here.
+- **`input.txt`**: You can manually put test inputs here to run your code.
+- **`readme.md`**: The file you're reading now!
+- **Copies of `template.cpp` (e.g., `problem_name.cpp`)**: You'll typically copy `template.cpp` and rename it for each specific problem you solve.
+- **`.exe` files (e.g., `template.exe`)**: These are the compiled, runnable versions of your C++ code. You don't edit these directly.
+- **`test.sh` & `generate_input.py`**: Advanced tools for testing your code with many inputs. We'll cover these later.
 
-| Feature            | Macro/Type/Alias         | Description                                  |
-| ------------------ | ------------------------ | -------------------------------------------- |
-| Fast I/O           | `FASTINOUT`              | Fast cin/cout setup                          |
-| Type Aliases       | `ll`, `vll`, `pii`, etc. | Shortforms for common types                  |
-| Ranges             | `all(v)`, `rall(v)`      | Easy container manipulation                  |
-| Loop Macros        | `f(i,s,e)`, `cf(i,s,e)`  | Fast for-loop patterns                       |
-| Debugging          | `DEBUG(...)`             | Advanced, local-only, colorized debug output |
-| Random Generator   | `rand_ll(l, r)`          | Uniform random in [l, r]                     |
-| PBDS               | `os<T>`                  | Ordered set with order-statistics            |
-| Modular Arithmetic | `Mint<MOD>`              | Handy class for mod calculations             |
-| Timer              | `Timer`                  | Profile code segments                        |
-| Safe Hashing       | `custom_hash`            | For unordered containers                     |
-| Math Utils         | `gcd`, `lcm`, `ceildiv`  | Common math tools                            |
+### 2. Setting Up Your Environment (One-Time Setup)
 
----
+To use this template, you need a C++ compiler. `g++` is a common one. If you're using VS Code, extensions like "C/C++" by Microsoft and "Code Runner" can help you compile and run code easily.
 
-## 📝 Example
+**Ensure `g++` is installed and in your system's PATH.** You can check by opening a terminal (PowerShell on Windows) and typing `g++ --version`.
+
+### 3. Writing Your Solution in `template.cpp`
+
+Open `template.cpp`. You'll see a lot of code. Don't be intimidated! Most of it is helper code. The most important part for you is the `solve()` function.
 
 ```cpp
-#include "template.cpp"
+// ───────────────── SOLVE FUNCTION ──────────────────────
+//  Your main code lives here.
+//  This function handles a single test case: reads input, computes, and prints output
+void solve()
+{
+    // --- Example: Read input for a single test case ---
+    // int n_val;
+    // read(n_val);                                   // Read the actual 'n' for this test case
+    // TRACE("Inside solve function, n_val:", n_val); // Added TRACE call
 
-void solve() {
-    int n; read(n);
-    vi a(n); read(a);
-    DEBUG(n, a);
-    UNIQUE(a);
-    print("Size after unique:", sz(a));
+    // --- Example: Compute answer for a single test case ---
+    // ll current_ans = 0;
+    // TODO: Replace this with actual problem logic based on n_val and other inputs.
+
+    // --- Example: Print output for a single test case ---
+    // print(current_ans);
+    // TODO: Print the computed answer, e.g., `print(result);`
 }
+```
 
-int main() {
-    FASTINOUT;
-    int t = 1;
-    read(t);
-    while (t--) solve();
+For our "sum of two numbers" problem, you'll modify `solve()` like this:
+
+```cpp
+void solve()
+{
+    int a, b; // Declare two integer variables
+    read(a, b); // Read two numbers from input and store them in 'a' and 'b'
+                // 'read' is a helper function from the template
+
+    int sum = a + b; // Calculate their sum
+
+    print(sum); // Print the sum to the output
+                // 'print' is another helper function
+}
+```
+
+### 4. Understanding `main()`
+
+The `main()` function is the entry point of your program. This template's `main()` is set up to handle multiple test cases, a common format in CP.
+
+```cpp
+int main()
+{
+    FASTINOUT; // Speeds up input/output
+    int t;
+    read(t); // Reads the number of test cases
+
+    while (t--) // Loop 't' times
+        solve(); // Call your solve() function for each test case
     return 0;
 }
 ```
 
----
+If a problem has only one test case, you can still use this structure. Just provide `1` as the first line of your input.
 
-## 🧑‍💻 For Beginners & Grandmasters
+### 5. Compiling Your Code
 
-- **Beginners:**  
-  Simple to use—just focus on writing your algorithm!
-- **Grandmasters:**  
-  All the power tools are here when you need them (PBDS, bit hacks, modular, advanced debug).
+"Compiling" means turning your human-readable C++ code into a machine-executable program (an `.exe` file on Windows).
 
----
+Open a terminal in the `c:\Coding\CP-Template` directory.
+Run the following command:
 
-## 🏆 Credits
-
-- Inspired by templates from "tourist", "Benq", and many top CPers.
-- Maintained by [jaipkapoor99](https://github.com/jaipkapoor99).
-
----
-
-## 📣 Contributions
-
-Feel free to fork or suggest improvements!
-
----
-
-## 🔗 License
-
-MIT License
-
----
-
-## 🤖 AI-Assisted Development
-
-This competitive programming setup, including the C++20 template, testing scripts, and this documentation, was developed and refined with the assistance of AI tools like GitHub Copilot. You can leverage such AI assistants to:
-
-- **Accelerate Coding**: Get suggestions for boilerplate code, algorithms, and complex logic within `template.cpp`.
-- **Generate Test Cases**: Ask AI to help you write or modify `generate_input.py` for specific problem constraints.
-- **Debug Issues**: Get insights into errors or unexpected behavior in your C++ code or shell scripts.
-- **Understand Code**: Ask for explanations of parts of the template or helper scripts.
-- **Improve Scripts**: Refine `test.sh` or other helper scripts for more advanced testing scenarios.
-
-By combining this robust template with AI-powered tools, you can significantly enhance your competitive programming workflow.
-
-# Competitive Programming Setup
-
-This repository contains a C++ template for competitive programming, along with helper scripts for testing and input generation.
-
-## Files
-
-- **`template.cpp`**: The main C++ template file. It includes common headers, fast I/O, and various helper macros and functions.
-- **`test.sh`**: A bash script for stress testing solutions. It compiles the C++ code, generates test cases (either inline or using a Python script), runs the solution against the test cases, and reports any discrepancies.
-- **`generate_input.py`**: A Python script for generating test cases. It can be customized to produce various types of input data.
-- **`input.txt`**: A file for providing manual input to the C++ program when not using the generator.
-- **`my.exe` / `template.exe`**: Compiled executable of `template.cpp`. (The name might vary based on compilation commands).
-
-## `template.cpp`
-
-This is a **C++20** template designed for competitive programming.
-
-### Key Features:
-
-- Standard headers pre-included (`<bits/stdc++.h>`).
-- Fast I/O setup.
-- Common type aliases (`ll` for `long long`, `vi` for `vector<int>`, etc.).
-- Debugging macros (`debug(...)`) that only print when `LOCAL` is defined.
-- Helper functions for reading and printing various data types, including pairs and vectors.
-- Variadic templates for `read` and `print` functions to handle multiple arguments.
-
-### Compilation:
-
-The `test.sh` script compiles this file using `g++`. The default flags are `-std=c++20 -O2 -Wall`. If you define `LOCAL` (e.g., `g++ -std=c++20 -O2 -Wall -DLOCAL template.cpp -o template.exe`), the `debug(...)` macros will be enabled.
-
-## `test.sh`
-
-This script automates the process of testing your C++ solution against multiple test cases.
-
-### Usage:
-
-```bash
-./test.sh [NUM_TESTS] [GENERATOR_TYPE]
+```powershell
+g++ -std=c++20 -O2 -Wall template.cpp -o template.exe
 ```
 
-- `NUM_TESTS` (optional): The number of test cases to run. Defaults to 100.
-- `GENERATOR_TYPE` (optional): Specifies the input generation method.
-  - `inline` (default): Uses a basic inline generator within the script (currently generates a single number).
-  - `python`: Uses the `generate_input.py` script to generate test cases.
+- `g++`: The compiler.
+- `-std=c++20`: Use the C++20 standard.
+- `-O2 -Wall`: Optimization and warning flags (good practice).
+- `template.cpp`: Your source code file.
+- `-o template.exe`: Name the output executable `template.exe`.
 
-### Configuration Variables (at the top of the script):
+If there are no errors, `template.exe` will be created.
 
-- `CPP_FILE`: Path to your C++ solution file (default: `template.cpp`).
-- `EXECUTABLE_NAME`: Name for the compiled executable (default: `template.exe`).
-- `INPUT_FILE`: Name of the file to store generated input (default: `input.txt`).
-- `OUTPUT_FILE`: Name of the file to store your program's output (default: `output.txt`).
-- `BRUTE_OUTPUT_FILE`: (If using a brute-force checker) Name of the file for brute-force output (default: `brute_output.txt`).
-- `COMPILER`: C++ compiler (default: `g++`).
-- `STD_VERSION`: C++ standard (default: `c++20`).
-- `OPTIMIZATION_LEVEL`: Compiler optimization level (default: `-O2`).
-- `EXTRA_FLAGS`: Additional compiler flags (default: `-Wall`).
-- `LOCAL_DEBUG_FLAG`: Flag to enable local debugging macros (default: `-DLOCAL`). Set to empty string to disable.
-- `PYTHON_GENERATOR_SCRIPT`: Path to the Python input generator (default: `generate_input.py`).
-- `KEEP_FILES_ON_FAILURE`: Set to `true` to keep `input.txt` and `output.txt` if a test fails (default: `false`).
+### 6. Running Your Code
 
-### Workflow:
+#### Method 1: Using `input.txt` (Recommended for Practice)
 
-1.  **Compilation**: Compiles the `CPP_FILE` into `EXECUTABLE_NAME`. If `LOCAL_DEBUG_FLAG` is set, it's included in compilation.
-2.  **Test Loop**:
-    - For each test case:
-      - **Input Generation**:
-        - If `GENERATOR_TYPE` is `python`, it runs `python3 ${PYTHON_GENERATOR_SCRIPT} > ${INPUT_FILE}`.
-        - If `GENERATOR_TYPE` is `inline`, it runs an internal `generate_inline_input` function.
-        - Otherwise, it attempts to use `input.txt` if it exists and is not empty, or defaults to inline generation.
-      - **Execution**: Runs `./${EXECUTABLE_NAME} < ${INPUT_FILE} > ${OUTPUT_FILE}`.
-      - **Verification**:
-        - Currently, it checks if the program terminated with an error (`$? -ne 0`).
-        - **(Placeholder for Brute-Force/Checker)**: The script includes commented-out sections for comparing against a brute-force solution or a dedicated checker. You would need to implement `brute.cpp` or a checker and uncomment/modify these parts.
-      - **Output**: Prints "AC" (Accepted) or "WA" (Wrong Answer) with the test case number. If "WA", it prints the input and your program's output.
-3.  **Cleanup**: Removes temporary files (`INPUT_FILE`, `OUTPUT_FILE`, `BRUTE_OUTPUT_FILE`) unless `KEEP_FILES_ON_FAILURE` is true and a test failed. The executable is always kept.
-
-## `generate_input.py`
-
-A Python script for generating test cases.
-
-### Structure:
-
-- `generate_case()`: This function is responsible for printing a single test case to standard output.
-- The script currently contains commented-out examples for generating various types of inputs:
-  - A single number.
-  - An array of numbers.
-  - A tree (edges).
-  - A grid.
-  - Multiple test cases (if your C++ program expects a `t` first).
-
-### Customization:
-
-Modify the `generate_case()` function to produce the specific input format required by your problem. Uncomment and adapt the examples as needed.
-
-## `input.txt`
-
-This file is used for manual input if you are not using the `test.sh` script's generation capabilities or if `test.sh` is configured to use it directly (e.g., if no generator is specified and `input.txt` exists).
-
-When `test.sh` uses a generator (`inline` or `python`), it will overwrite this file with the generated input for each test case.
-
-## Setup and Usage Flow
-
-1.  **Write your solution** in `template.cpp` (or rename it and update `test.sh`).
-2.  **Configure `test.sh`**:
-    - Adjust `CPP_FILE`, `EXECUTABLE_NAME` if needed.
-    - Set `LOCAL_DEBUG_FLAG` to `-DLOCAL` for debugging, or "" to disable.
-3.  **Prepare Input Generation**:
-    - **For Python generator**: Modify `generate_input.py`'s `generate_case()` function to match the problem's input constraints.
-    - **For inline generator**: Modify the `generate_inline_input()` function within `test.sh`.
-    - **For manual input**: Place your test case in `input.txt` and ensure `test.sh` is set to use it (e.g., by providing no generator type or an invalid one, and ensuring `input.txt` is present).
-4.  **Run the test script**:
-    ```bash
-    ./test.sh [number_of_tests] [generator_type]
+1.  Open `input.txt`.
+2.  For our sum problem, if there's 1 test case and the numbers are 5 and 10:
     ```
-    For example:
-    ```bash
-    ./test.sh 50 python  # Run 50 tests using the Python generator
-    ./test.sh 10 inline # Run 10 tests using the inline generator
-    ./test.sh           # Run 100 tests using the default (inline) generator
+    1
+    5 10
     ```
-5.  **Review results**: The script will indicate "AC" or "WA" for each test. If "WA", it will show the input that caused the failure and your program's output.
+    If there are 2 test cases, e.g., (5, 10) and (3, 7):
+    ```
+    2
+    5 10
+    3 7
+    ```
+3.  In the terminal, run:
+    ```powershell
+    .\template.exe < input.txt
+    ```
+    This command runs your program and tells it to read its input from `input.txt`.
+    The output will be:
+    ```
+    15
+    10
+    ```
 
-This setup provides a flexible and robust environment for developing and testing competitive programming solutions.
+#### Method 2: Interactive Input (Less Common for CP)
+
+You can also run it and type input directly:
+
+```powershell
+.\template.exe
+```
+
+The program will wait. Type:
+
+```
+1
+5 10
+```
+
+And press Enter after each line. It will then print `15`.
+
+### 7. Build Modes and Debugging
+
+The template has different "modes":
+
+- **Contest Mode (Default):** Lean and fast for submissions.
+  ```powershell
+  g++ -std=c++20 -O2 -Wall template.cpp -o template.exe
+  ```
+- **Practice/Local Debug Mode:** Enables helpful debugging messages.
+  Compile with `-DPRACTICE -DLOCAL`:
+  ```powershell
+  g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL template.cpp -o template_debug.exe
+  ```
+  Now, if you use `TRACE(...)` or `DEBUG(...)` macros in your `solve()` function, they will print information to the error stream (usually your terminal, separate from the main output).
+  Example:
+  ```cpp
+  void solve() {
+      int a, b;
+      read(a, b);
+      TRACE("Read a:", a, "b:", b); // This will print if compiled with -DLOCAL -DPRACTICE
+      int sum = a + b;
+      DEBUG(sum); // So will this
+      print(sum);
+  }
+  ```
+  When you run `.\template_debug.exe < input.txt`, you'll see your `TRACE` and `DEBUG` messages in the terminal, which helps you understand what your code is doing. These messages are automatically disabled in contest mode.
+
+### 8. Key Template Features (Brief Overview)
+
+As you get more comfortable, explore these:
+
+- **Type Aliases (Lines 25-47):**
+  - `ll` for `long long`, `vi` for `vector<int>`, `pii` for `pair<int, int>`. These save typing.
+- **Constants (Lines 50-57):**
+  - `MOD` (for modular arithmetic), `INF` (infinity), `NL` (newline), `SPACE`.
+- **Modular Arithmetic (`ModularOps` struct, Lines 61-99):**
+  - For problems involving large numbers where you need results modulo a specific number (e.g., `10^9 + 7`).
+  - Usage: `Mint::add(a,b)`, `Mint::power(base, exp)`. `Mint` uses the default `MOD`.
+- **Macros (Lines 110-127):**
+  - `f(i, s, e)`: for loop.
+  - `all(v)`: gets iterators for a whole vector (e.g., `sort(all(my_vector))`).
+  - `sz(v)`: size of a container.
+  - `YES`, `NO`: print "YES" or "NO" with a newline.
+- **Input/Output Helpers (Lines 220-248):**
+  - `read(...)`: Reads various types, including multiple arguments (`read(a,b,c)`).
+  - `print(...)`: Prints various types, with spaces between multiple arguments and a newline at the end for single arguments or the last in a variadic call.
+  - `printv(vector)`: Prints elements of a vector separated by spaces, then a newline. (You can rename this to `print` too, C++ overloading handles it).
+
+### 9. Solving a New Problem
+
+1.  **Copy `template.cpp`** to a new file, e.g., `problem_X.cpp`.
+2.  **Modify the `solve()` function** in `problem_X.cpp` with your logic.
+3.  **Compile `problem_X.cpp`**:
+    ```powershell
+    g++ -std=c++20 -O2 -Wall problem_X.cpp -o problem_X.exe
+    ```
+4.  **Test** with `input.txt`:
+    ```powershell
+    .\problem_X.exe < input.txt
+    ```
+
+### 10. What About `test.sh` and `generate_input.py`? (Advanced)
+
+These are for "stress testing." Sometimes your code works for simple cases but fails on tricky or large inputs.
+
+- `generate_input.py`: A Python script you customize to create many random test inputs according to the problem's constraints.
+- `test.sh`: A script (for Linux-like terminals, e.g., Git Bash on Windows, or WSL) that:
+  1.  Compiles your C++ solution.
+  2.  (Optionally) Compiles a "brute-force" solution (a simple, correct, but slow solution).
+  3.  Runs your solution and the brute-force solution on many inputs generated by `generate_input.py`.
+  4.  Compares their outputs. If they differ, it means your main solution has a bug, and it shows you the input that caused the issue.
+
+This is a powerful technique for finding bugs. You'll learn to use this as you tackle harder problems. For now, focus on `template.cpp` and `input.txt`.
+
+## Tips for Beginners
+
+- **Start Simple:** Don't try to understand the whole template at once. Focus on `solve()`, `read()`, and `print()`.
+- **Practice:** The more problems you solve, the more familiar you'll become.
+- **Debug:** Use `TRACE` and `DEBUG` (compile with `-DPRACTICE -DLOCAL`) when your code doesn't work. Print variable values at different stages.
+- **Read Problem Statements Carefully:** Misunderstanding the problem is a common mistake.
+- **Ask for Help:** If you're stuck, online CP communities are great resources.
+
+This template is a powerful tool. As you grow in CP, you'll appreciate more of its features. Good luck, and have fun coding!

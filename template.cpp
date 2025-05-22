@@ -63,6 +63,64 @@ constexpr double PI = std::numbers::pi;
 constexpr ll INF = 1e18;
 constexpr int INF32 = 1e9;
 
+// ────────────── MODULAR ARITHMETIC ─────────────────
+//  Operations for modular arithmetic. Pass the modulus as a template parameter.
+//  Assumes Modulus is a prime number for modular inverse.
+template <ll Modulus>
+struct ModularOps
+{
+    static_assert(Modulus > 0, "Modulus must be positive.");
+
+    static ll add(ll a, ll b)
+    {
+        return (a + b) % Modulus;
+    }
+
+    static ll sub(ll a, ll b)
+    {
+        return (a - b % Modulus + Modulus) % Modulus;
+    }
+
+    static ll mul(ll a, ll b)
+    {
+        return (a * b) % Modulus;
+    }
+
+    static ll power(ll base, ll exp)
+    {
+        ll res = 1;
+        base %= Modulus;
+        while (exp > 0)
+        {
+            if (exp % 2 == 1)
+                res = mul(res, base);
+            base = mul(base, base);
+            exp /= 2;
+        }
+        return res;
+    }
+
+    static ll inv(ll n)
+    {
+        return power(n, Modulus - 2); // Fermat's Little Theorem
+    }
+
+    static ll div(ll a, ll b)
+    {
+        return mul(a, inv(b));
+    }
+};
+
+// Example usage for the global MOD constant:
+// using DefaultMint = ModularOps<MOD>;
+// DefaultMint::add(a, b);
+
+// Shorthand for common moduli
+using Mint = ModularOps<MOD>;   // Default to MOD (10^9 + 7)
+using Mint1 = ModularOps<MOD1>; // For 998244353
+// Add more aliases as needed, e.g.:
+// using Mint2 = ModularOps<1000000009>; // Another common prime
+
 // ──────────────── FAST INPUT/OUTPUT ────────────────────
 #define FASTINOUT                \
     ios::sync_with_stdio(false); \
@@ -121,10 +179,6 @@ void dbg(const std::source_location loc, Args &&...args)
     ((cerr << RED << args << RESET << " | "), ...);
     cerr << NL;
 }
-#define DEBUG(...) dbg(std::source_location::current(), __VA_ARGS__)
-#else
-#define DEBUG(...)
-#endif
 
 // Helper for dbg to print pairs
 template <typename A, typename B>
@@ -144,6 +198,11 @@ ostream &operator<<(ostream &os, const T_container &v)
     return os << '}';
 }
 
+#define DEBUG(...) dbg(std::source_location::current(), __VA_ARGS__)
+#else // LOCAL
+#define DEBUG(...)
+#endif // LOCAL
+
 // ───────────────── TIMER UTILITY ──────────────────────
 //   For measuring time per phase (practice use).
 class Timer
@@ -161,8 +220,6 @@ public:
 
 // ──────────── GENERIC INPUT/OUTPUT HELPERS ─────────────
 //  Rapid vector and variadic-style IO for hand-written and AI code.
-template <typename T>
-void read(T &x) { cin >> x; }
 template <typename T, typename... Args>
 void read(T &first, Args &...args)
 {
@@ -197,63 +254,66 @@ void printv(const vector<T> &v)
 ll solve_brute_example(int n)
 {
     // Replace with your own O(N^3)/brute solution.
+    // TODO: Implement your brute-force logic here.
     ll ans = 0;
-    cf(i, 1, n) ans += i;
+    // cf(i, 1, n) ans += i; // Example logic commented out
     return ans;
 }
 #endif
 
 // ───────────────── SOLVE FUNCTION ──────────────────────
 //  Your main code lives here.
-//  This function handles a single test case: reads input, computes, and prints output.
+//  This function handles a single test case: reads input, computes, and prints output
 void solve()
 {
     // --- Example: Read input for a single test case ---
     int n_val;
-    read(n_val); // Read the actual 'n' for this test case
+    read(n_val);                                   // Read the actual 'n' for this test case
+    TRACE("Inside solve function, n_val:", n_val); // Added TRACE call
 
     // --- Example: Compute answer for a single test case ---
     ll current_ans = 0;
     // TODO: Replace this with actual problem logic based on n_val and other inputs.
-    // For this example, let's assume the task is to sum numbers from 1 to n_val,
-    // matching the current solve_brute_example.
-    cf(i, 1, n_val)
-    {
-        current_ans += i;
-    }
+    // For this example, let's assume the task is to sum numbers from 1 to n_val,  // Example comment
+    // matching the current solve_brute_example.                                  // Example comment
+    // cf(i, 1, n_val) // Example logic commented out
+    // {               // Example logic commented out
+    //     current_ans += i; // Example logic commented out
+    // }               // Example logic commented out
 
     // --- PRACTICE Block: Compare with brute-force solution ---
 #ifdef PRACTICE
-    ll ref_ans = solve_brute_example(n_val); // Pass the n_val read for this test case
-    if (current_ans != ref_ans)
-    {
-        // If LOCAL is also defined, TRACE will print detailed variable states.
-        TRACE("ASSERTION FAILED: Mismatch with brute force solution.");
-        TRACE("Input (n_val):", n_val);
-        TRACE("Your Answer (current_ans):", current_ans);
-        TRACE("Brute Force Answer (ref_ans):", ref_ans);
-        // The ASSERT macro will then print its message and exit.
-        ASSERT(current_ans == ref_ans, "Solution mismatch with brute force. See TRACE for details if LOCAL is defined.");
-    }
-    else
-    {
-        // Optional: Trace success for practice mode if LOCAL is on
-        TRACE("PRACTICE: Brute force check passed for n_val:", n_val, "ans:", current_ans);
-    }
+    // TODO: Adjust the input to solve_brute_example if necessary
+    // ll ref_ans = solve_brute_example(n_val); // Pass the n_val read for this test case
+    // if (current_ans != ref_ans)
+    // {
+    //     // If LOCAL is also defined, TRACE will print detailed variable states.
+    //     TRACE("ASSERTION FAILED: Mismatch with brute force solution.");
+    //     // TRACE("Input (n_val):", n_val);
+    //     // TRACE("Your Answer (current_ans):", current_ans);
+    //     // TRACE("Brute Force Answer (ref_ans):", ref_ans);
+    //     // The ASSERT macro will then print its message and exit.
+    //     ASSERT(current_ans == ref_ans, "Solution mismatch with brute force. See TRACE for details if LOCAL is defined.");
+    // }
+    // else
+    // {
+    //     // Optional: Trace success for practice mode if LOCAL is on
+    //     // TRACE("PRACTICE: Brute force check passed for n_val:", n_val, "ans:", current_ans);
+    // }
 #endif
 
     // --- Example: Print output for a single test case ---
-    print(current_ans);
+    // print(current_ans);
+    // TODO: Print the computed answer, e.g., `print(result);`
 }
 
 // ────────────────────── MAIN ───────────────────────────
 int main()
 {
     FASTINOUT;
-    int t = 1;
-#ifndef PRACTICE
-    read(t); // For stress-test, t=1 by default
-#endif
+    int t;
+    read(t); // Always read the number of test cases
+
     while (t--)
         solve();
     return 0;

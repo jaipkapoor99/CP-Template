@@ -9,3 +9,8 @@ __pycache__/
 *.pyc
 *.pyo
 tempCodeRunnerFile.cpp
+
+# CPH specific files
+.cph/
+.cph_settings/
+.cph_cache/
