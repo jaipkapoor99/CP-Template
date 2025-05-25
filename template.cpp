@@ -19,8 +19,7 @@
 #include <span>
 #include <chrono>
 #include <random>
-#include <source_location>
-#include <filesystem> // Added for std::filesystem::path in DEBUG macro
+#include "debug_utils.hpp" // Include the new debug header
 using namespace std;
 using namespace __gnu_pbds;
 
@@ -150,97 +149,6 @@ using Mint1 = ModularOps<MOD1>; // For 998244353
 #define UNIQUE(v) sort(all(v)), v.erase(unique(all(v)), v.end())
 #define forV(v) for (auto &e : (v))
 #define forM(m) for (auto &[key, value] : (m))
-
-// ─────────── PRACTICE ASSERT/TRACE/BRUTE HOOKS ─────────
-//  PRACTICE flag enables runtime asserts, tracing and brute solvers.
-#ifdef PRACTICE
-// ASSERT: crash-fast on invariants. Use e.g. ASSERT(x >= 0, "x nonnegative")
-#define ASSERT(cond, msg)                                                               \
-    if (!(cond))                                                                        \
-    {                                                                                   \
-        std::cerr << RED << "ASSERT FAIL @ "                                            \
-                  << std::filesystem::path(std::source_location::current().file_name())  \
-                         .filename().string()                                           \
-                  << ":" << std::source_location::current().line()                      \
-                  << " (" << std::source_location::current().function_name() << "): "   \
-                  << RESET << (msg) << RESET << std::endl;                              \
-        exit(42);                                                                       \
-    }
-// TRACE: handy logging for PRACTICE builds, toggle with -DLOCAL
-#ifdef LOCAL
-#define TRACE(...) dbg(std::source_location::current(), __VA_ARGS__)
-#else
-#define TRACE(...)
-#endif
-#else
-#define ASSERT(cond, msg) ((void)0)
-#define TRACE(...)
-#endif
-
-// ────────────── DEBUGGING (Color + Context) ────────────
-//  Use DEBUG(a,b,v) to print state with file/line, colored, local only.
-#ifdef LOCAL
-#define RESET "\\033[0m"
-#define RED "\\033[31m"
-#define BLUE "\\033[34m"
-#define GREEN "\\033[32m"
-#else // LOCAL
-#define RESET ""
-#define RED ""
-#define BLUE ""
-#define GREEN ""
-#endif // LOCAL
-
-#ifdef LOCAL
-// Helper for dbg to print pairs
-template <typename A, typename B>
-ostream &operator<<(ostream &os, const pair<A, B> &p)
-{
-    return os << '(' << p.fi << ", " << p.se << ')';
-}
-
-// Helper for dbg to print vectors
-template <typename T_container, typename T = typename enable_if<!is_same<T_container, string>::value, typename T_container::value_type>::type>
-ostream &operator<<(ostream &os, const T_container &v)
-{
-    os << '{';
-    string sep;
-    for (const T &x : v)
-        os << sep << x, sep = ", ";
-    return os << '}';
-}
-
-// Recursive helper to print variadic arguments for dbg
-template <typename T_arg, typename... Other_Args>
-void _dbg_print_recursive(std::ostream &os, T_arg &&first, Other_Args &&...rest)
-{
-    os << std::forward<T_arg>(first);
-    // Fold expression to print a space followed by each subsequent argument in 'rest'.
-    // std::forward is used to preserve value categories of arguments in 'rest'.
-    ((os << " " << std::forward<Other_Args>(rest)), ...);
-}
-
-template <typename... Args>
-void dbg(const std::source_location loc, Args &&...args)
-{
-    // Using std::filesystem::path for filename only.
-    // Ensure <filesystem> is included (usually via <bits/stdc++.h> in C++20).
-    // If this causes issues, it can be reverted to loc.file_name().
-    std::cerr << RED << std::filesystem::path(loc.file_name()).filename().string()
-              << ":" << loc.line()
-              << " (" << loc.function_name() << ") "
-              << BLUE << "DEBUG: " << RESET;
-    if constexpr (sizeof...(args) > 0)
-    {
-        _dbg_print_recursive(std::cerr, std::forward<Args>(args)...);
-    }
-    std::cerr << RESET << std::endl; // Use std::endl for flushing and newline
-}
-
-#define DEBUG(...) dbg(std::source_location::current(), __VA_ARGS__)
-#else // LOCAL
-#define DEBUG(...)
-#endif // LOCAL
 
 // ───────────────── TIMER UTILITY ──────────────────────
 //   For measuring time per phase (practice use).
@@ -403,15 +311,15 @@ HOW TO USE THIS TEMPLATE
 ─────────────────────────────────────────────────────────────
 
 **For local debugging (full features):**
-    g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL main.cpp -o my
+    g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL main.cpp debug_utils.hpp -o my
     ./my < input.txt
 
 **For stress testing (assert/brute only, no debug spam):**
-    g++ -std=c++20 -O2 -Wall -DPRACTICE main.cpp -o my
+    g++ -std=c++20 -O2 -Wall -DPRACTICE main.cpp debug_utils.hpp -o my
     ./test.sh   # see shell script in prior messages
 
 **For contest/online judge (clean, fast):**
-    g++ -std=c++20 -O2 -Wall main.cpp -o submit
+    g++ -std=c++20 -O2 -Wall main.cpp -o submit  // debug_utils.hpp not compiled if not included or features disabled
 
 **Using with Competitive Programming Helper (CPH) like extensions:**
     This template is designed to be compatible with CPH. CPH typically
@@ -422,11 +330,27 @@ HOW TO USE THIS TEMPLATE
 
 ─────────────────────────────────────────────────────────────
 Features:
-- PRACTICE enables brute/ASSERT/TRACE blocks for bug-proofing
-- DEBUG gives color, context, and file/line info on-demand
-- Template aliases and macros match modern CP/DSA standards
-- Timer utility for self-benchmarking
-- All extras vanish in contest builds for safety
-
-Edit `solve_brute_example()` per problem to check tricky cases!
+- Modern C++20: Leverages C++20 features for concise and efficient code.
+- Modular Design: Debugging utilities (`ASSERT`, `TRACE`, `DEBUG`) are in `debug_utils.hpp`.
+- Comprehensive Macros:
+    - Loop_ing: `f(i,s,e)`, `cf(i,s,e)`, `rf(i,e,s)`, `forV(container)`.
+    - Containers: `sz(v)`, `all(v)`, `rall(v)`, `pb`, `eb`, `UNIQUE(v)`.
+    - Pairs: `fi`, `se`.
+    - I/O & Constants: `SPACE`, `NL`, `YES`, `NO`.
+- Type Aliases: For common types (`ll`, `pii`, `vll`, `os`, `omap`, etc.) and modular arithmetic (`Mint`, `Mint1`).
+- Advanced Debugging (via `debug_utils.hpp`):
+    - `DEBUG(...)`: Prints variables with color, file, line, and function context (only in LOCAL builds).
+    - `ASSERT(cond, msg)`: Crash-fast with detailed context on assertion failure (only in PRACTICE builds).
+    - `TRACE(...)`: Conditional logging (PRACTICE + LOCAL builds).
+- Utility Functions:
+    - `maximise(var, val1, ...)`: Updates `var` to the maximum of itself and subsequent values.
+    - `minimise(var, val1, ...)`: Updates `var` to the minimum of itself and subsequent values.
+    - Variadic `read(...)` and `print(...)` for easy I/O of multiple arguments using C++17 fold expressions.
+- Modular Arithmetic: `ModularOps<MOD>` struct for operations, with `Mint` aliases.
+- Timer Utility: `Timer` class for self-benchmarking code segments.
+- Practice Mode Support:
+    - `PRACTICE` flag enables `ASSERT`, `TRACE`, and the `solve_brute_example()` hook.
+    - Edit `solve_brute_example()` per problem for correctness checks.
+- Build Profiles: Clear separation for local debugging, stress testing, and contest submission (see build commands above).
+- CPH Compatibility: Designed to work with Competitive Programming Helper extensions.
 */

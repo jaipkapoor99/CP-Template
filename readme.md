@@ -5,20 +5,21 @@ This template provides a robust starting point for C++20 competitive programming
 ## Features
 
 - **C++20 Standard:** Leverages modern C++ features.
+- **Modular Design:** Core template in `template.cpp` (or your `main.cpp`), with debugging utilities (`ASSERT`, `TRACE`, `DEBUG`, etc.) neatly separated into `debug_utils.hpp`.
 - **Build Modes:**
   - `PRACTICE + LOCAL`: Enables full debugging capabilities including `TRACE`, `DEBUG`, `ASSERT`, and brute-force checker. Compile with:
     ```bash
-    g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL main.cpp -o my
+    g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL main.cpp debug_utils.hpp -o my
     ```
   - `PRACTICE` (only): For stress testing with `ASSERT` and brute-force, but without verbose `DEBUG` or `TRACE` outputs. Compile with:
     ```bash
-    g++ -std=c++20 -O2 -Wall -DPRACTICE main.cpp -o my
+    g++ -std=c++20 -O2 -Wall -DPRACTICE main.cpp debug_utils.hpp -o my
     ```
   - Contest Mode: Optimized for submission (no debug symbols or macros). Compile with:
     ```bash
     g++ -std=c++20 -O2 -Wall main.cpp -o submit
     ```
-- **Debugging Utilities:**
+- **Debugging Utilities (in `debug_utils.hpp`):**
   - `DEBUG(...)`: Variadic macro for printing debug information with source location (file, line, function) and ANSI colors. Enabled by `-DLOCAL`.
   - `TRACE(...)`: Similar to `DEBUG`, intended for tracing execution flow. Enabled by `-DLOCAL` and `-DPRACTICE`.
   - `ASSERT(condition, message)`: Halts execution if a condition is false, printing a message. Enabled by `-DPRACTICE`.
@@ -40,11 +41,12 @@ This template provides a robust starting point for C++20 competitive programming
 ## How to Use
 
 1.  **Copy `template.cpp`** to your problem file (e.g., `main.cpp`).
-2.  **Implement Logic:**
+2.  **Ensure `debug_utils.hpp`** is in the same directory or your include path.
+3.  **Implement Logic:**
     - Fill in the problem-specific logic within the `solve(int test_case_num)` function.
     - If using the brute-force checker, implement `solve_brute_example(...)` with the naive approach.
-3.  **Compile:** Use the appropriate g++ flags based on your needs (see Build Modes).
-4.  **Run:**
+4.  **Compile:** Use the appropriate g++ flags based on your needs (see Build Modes).
+5.  **Run:**
     - For local testing with input redirection: `./my < input.txt`
     - For CPH-like extensions, ensure the extension is configured to call `solve()` for each test case.
 
