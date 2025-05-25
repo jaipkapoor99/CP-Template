@@ -56,8 +56,8 @@ using umap = unordered_map<K, V>;
 // ──────────────────── CONSTANTS ────────────────────────
 constexpr int MOD = 1'000'000'007;
 constexpr int MOD1 = 998'244'353;
-constexpr char SPACE = ' ';
-constexpr char NL = '\n';
+#define SPACE ' '
+#define NL '\n'
 constexpr double EPS = 1e-9;
 
 #if __cplusplus >= 202002L && defined(__cpp_lib_numbers)
@@ -155,11 +155,16 @@ using Mint1 = ModularOps<MOD1>; // For 998244353
 //  PRACTICE flag enables runtime asserts, tracing and brute solvers.
 #ifdef PRACTICE
 // ASSERT: crash-fast on invariants. Use e.g. ASSERT(x >= 0, "x nonnegative")
-#define ASSERT(cond, msg)                                           \
-    if (!(cond))                                                    \
-    {                                                               \
-        cerr << "ASSERT FAIL: " << (msg) << " @" << __LINE__ << NL; \
-        exit(42);                                                   \
+#define ASSERT(cond, msg)                                                               \
+    if (!(cond))                                                                        \
+    {                                                                                   \
+        std::cerr << RED << "ASSERT FAIL @ "                                            \
+                  << std::filesystem::path(std::source_location::current().file_name())  \
+                         .filename().string()                                           \
+                  << ":" << std::source_location::current().line()                      \
+                  << " (" << std::source_location::current().function_name() << "): "   \
+                  << RESET << (msg) << RESET << std::endl;                              \
+        exit(42);                                                                       \
     }
 // TRACE: handy logging for PRACTICE builds, toggle with -DLOCAL
 #ifdef LOCAL
@@ -191,7 +196,7 @@ using Mint1 = ModularOps<MOD1>; // For 998244353
 template <typename A, typename B>
 ostream &operator<<(ostream &os, const pair<A, B> &p)
 {
-    return os << '(' << p.first << ", " << p.second << ')';
+    return os << '(' << p.fi << ", " << p.se << ')';
 }
 
 // Helper for dbg to print vectors
@@ -210,11 +215,9 @@ template <typename T_arg, typename... Other_Args>
 void _dbg_print_recursive(std::ostream &os, T_arg &&first, Other_Args &&...rest)
 {
     os << std::forward<T_arg>(first);
-    if constexpr (sizeof...(rest) > 0)
-    {
-        os << " "; // Add space before the next argument
-        _dbg_print_recursive(os, std::forward<Other_Args>(rest)...);
-    }
+    // Fold expression to print a space followed by each subsequent argument in 'rest'.
+    // std::forward is used to preserve value categories of arguments in 'rest'.
+    ((os << " " << std::forward<Other_Args>(rest)), ...);
 }
 
 template <typename... Args>
@@ -254,22 +257,57 @@ public:
     }
 };
 
+// ───────────────── UTILITY FUNCTIONS ────────────────────
+// Maximises the first argument with the subsequent arguments using a C++17 fold expression.
+// Example: int x = 5; maximise(x, 10, 2.0, 7L); // x becomes 10
+// Can be called with zero or more values to compare against:
+// maximise(x); // x remains unchanged
+// maximise(x, val1); // x becomes std::max(original_x, val1)
+// maximise(x, val1, val2, ...); // x is updated sequentially with each val
+template <typename T_ref, typename... T_vals>
+// Requires T_vals to be comparable with T_ref, and the result of std::max(T_ref, T_vals_i)
+// to be assignable back to T_ref.
+void maximise(T_ref &target, const T_vals&... vals) {
+    // This unary right fold expands to:
+    // (void)(target = std::max(target, val1)), (void)(target = std::max(target, val2)), ...
+    // effectively performing target = std::max(target, val_i) for each val_i in vals.
+    // If vals is empty, target remains unchanged.
+    ( (void)(target = std::max(target, vals)), ... );
+}
+
+// Minimises the first argument with the subsequent arguments using a C++17 fold expression.
+// Example: int x = 5; minimise(x, 10, 2.0, 7L); // x becomes 2
+// Can be called with zero or more values to compare against:
+// minimise(x); // x remains unchanged
+// minimise(x, val1); // x becomes std::min(original_x, val1)
+// minimise(x, val1, val2, ...); // x is updated sequentially with each val
+template <typename T_ref, typename... T_vals>
+// Requires T_vals to be comparable with T_ref, and the result of std::min(T_ref, T_vals_i)
+// to be assignable back to T_ref.
+void minimise(T_ref &target, const T_vals&... vals) {
+    // Similar to maximise, this performs target = std::min(target, val_i) for each val_i.
+    // If vals is empty, target remains unchanged.
+    ( (void)(target = std::min(target, vals)), ... );
+}
+
 // ──────────── GENERIC INPUT/OUTPUT HELPERS ─────────────
 //  Rapid vector and variadic-style IO for hand-written and AI code.
 template <typename T, typename... Args>
 void read(T &first, Args &...args)
 {
+    // Read the first argument
     cin >> first;
-    if constexpr (sizeof...(args) > 0)
-    {
-        read(args...);
-    }
-} // Variadic read
+    // Fold expression to read the remaining arguments. Expands to (cin >> arg1), (cin >> arg2), ...
+    // The comma operator ensures left-to-right evaluation.
+    // The void cast is to silence potential warnings about unused result of comma operator.
+    ((void)(cin >> args), ...);
+}
+
 template <typename T>
 void read(vector<T> &v)
 {
-    for (T &x : v)
-        cin >> x;
+    forV(v) // Use forV macro; e will be of type T&
+        cin >> e;
 }
 
 // Refactored variadic print function
@@ -277,22 +315,18 @@ template <typename T, typename... Args>
 void print(const T &first, const Args &...args)
 {
     cout << first;
-    if constexpr (sizeof...(args) > 0)
-    {
-        cout << SPACE;
-        print(args...); // Recursive call for remaining arguments
-    }
-    else
-    {
-        cout << NL; // Base case: last argument (or only argument), print newline
-    }
+    // Fold expression to print each subsequent argument, preceded by a SPACE.
+    // std::forward is used to preserve value categories if args were not const&.
+    // Here, since they are const&, std::forward is not strictly necessary but harmless.
+    ((cout << SPACE << args), ...);
+    cout << NL; // Print newline after all arguments
 }
 
 template <typename T>
 void printv(const vector<T> &v)
 {
-    for (const T &x : v)
-        cout << x << SPACE;
+    forV(v) // Use forV macro; e will be of type const T&
+        cout << e << SPACE;
     cout << NL;
 }
 
@@ -342,11 +376,7 @@ void solve(int test_case_num) // Added test_case_num parameter
     // }
     // else
     // {
-    //     std::cerr << GREEN << std::filesystem::path(std::source_location::current().file_name()).filename().string()
-    //               << ":" << std::source_location::current().line()
-    //               << " (" << std::source_location::current().function_name() << ") "
-    //               << BLUE << "DEBUG: " << RESET
-    //               << GREEN << "PRACTICE (Test Case #" << test_case_num << "): Brute force check passed for n_val: " << n_val << " ans: " << actual_solution_ans << RESET << std::endl;
+    //     TRACE("PRACTICE (Test Case #", test_case_num, "): Brute force check passed for n_val: ", n_val, " ans: ", actual_solution_ans);
     // }
 #endif
 
@@ -362,8 +392,8 @@ int main()
     int t;
     read(t); // Always read the number of test cases
 
-    for (int i = 1; i <= t; ++i) // Loop from 1 to t to get test case number
-        solve(i);                // Pass current test case number
+    f(i, 0, t) // Loop from 0 to t-1; pass 1-indexed test case number to solve
+        solve(i + 1);            // Pass current test case number (i+1 because loop is 0-indexed)
     return 0;
 }
 
