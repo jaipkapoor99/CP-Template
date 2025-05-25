@@ -50,6 +50,30 @@ This template provides a robust starting point for C++20 competitive programming
     - For local testing with input redirection: `./my < input.txt`
     - For CPH-like extensions, ensure the extension is configured to call `solve()` for each test case.
 
+### Configuring Your Editor/IDE for Running (e.g., VS Code)
+
+If you use a code runner extension in your editor (like "Code Runner" in VS Code), you'll want to configure its C++ execution command to correctly compile and run this template with debugging features enabled.
+
+**Example for VS Code's "Code Runner" extension (`settings.json`):**
+
+Modify your `settings.json` by adding/updating the `code-runner.executorMap` for C++:
+
+```json
+"code-runner.executorMap": {
+    "cpp": "cd $dir && g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL $fileName debug_utils.hpp -o $fileNameWithoutExt && $dir/$fileNameWithoutExt"
+}
+```
+
+This command ensures:
+
+- Compilation occurs in the current file's directory (`cd $dir`).
+- C++20 standard is used with common flags (`-std=c++20 -O2 -Wall`).
+- Debugging defines (`-DPRACTICE -DLOCAL`) are active.
+- Both your source file (`$fileName`) and `debug_utils.hpp` are part of the compilation.
+- The program is executed if compilation succeeds.
+
+Remember to adjust if your source file isn't named `main.cpp` (the `$fileName` variable usually handles this automatically) and ensure `debug_utils.hpp` is in the same directory as `$fileName`.
+
 ## Customization
 
 - Modify `solve_brute_example` for each problem.
