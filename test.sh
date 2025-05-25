@@ -7,7 +7,7 @@ OPTIMIZATION_LEVEL="-O2"
 WARNING_FLAGS="-Wall"
 PRACTICE_DEFINE="-DPRACTICE" # Enables asserts and internal brute-force checks
 LOCAL_DEFINE="-DLOCAL"     # Enables TRACE and DEBUG macros (optional)
-SOURCE_FILE="template.cpp"
+SOURCE_FILE="main.cpp"
 EXECUTABLE_NAME="my_solution"
 INPUT_FILE="input.txt"
 OUTPUT_FILE="output.txt"
@@ -15,7 +15,6 @@ BRUTE_OUTPUT_FILE="brute_output.txt" # If using a separate brute force solution
 
 # Number of test cases to run (can be overridden by script argument)
 DEFAULT_NUM_TESTS=100
-NUM_TESTS=${1:-$DEFAULT_NUM_TESTS} # Use first argument or default
 
 # Test case generator (customize as needed)
 # Option 1: Simple inline generator (current example: random N)
@@ -26,9 +25,14 @@ PYTHON_GENERATOR_SCRIPT="generate_input.py"
 # Set to "true" to keep input/output files on failure for debugging
 KEEP_FILES_ON_FAILURE=true
 
+# NUM_TESTS uses $1 or default (if $1 is not for combine/package, which is now removed)
+NUM_TESTS=${1:-$DEFAULT_NUM_TESTS}
+
 # --- Compilation ---
 echo "Compiling $SOURCE_FILE..."
-$COMPILER -std=$STD_VERSION $OPTIMIZATION_LEVEL $WARNING_FLAGS $PRACTICE_DEFINE $LOCAL_DEFINE $SOURCE_FILE debug_utils.hpp -o $EXECUTABLE_NAME
+# debug_utils.hpp and cp_utils.hpp are included by $SOURCE_FILE (main.cpp)
+# The compiler will find them if they are in the same directory.
+$COMPILER -std=$STD_VERSION $OPTIMIZATION_LEVEL $WARNING_FLAGS $PRACTICE_DEFINE $LOCAL_DEFINE $SOURCE_FILE -o $EXECUTABLE_NAME
 
 # Check if compilation was successful
 if [ $? -ne 0 ]; then

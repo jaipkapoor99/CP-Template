@@ -1,83 +1,79 @@
 # Universal C++20 Competitive Programming Template
 
-This template provides a robust starting point for C++20 competitive programming, incorporating best practices and utilities for efficient problem-solving and debugging.
+This template provides a robust starting point for C++20 competitive programming. It's modular, with core logic in `main.cpp`, general utilities in `cp_utils.hpp`, and debugging tools in `debug_utils.hpp`.
+
+## Project Structure
+
+- `main.cpp`: Contains your `main()` and `solve()` functions. This is the primary file you'll edit for each problem. It includes `cp_utils.hpp`.
+- `cp_utils.hpp`: A comprehensive header with type aliases, constants, macros, modular arithmetic, timer, utility functions, number theory helpers, and generic I/O. It includes `debug_utils.hpp`.
+- `debug_utils.hpp`: Provides debugging macros like `DEBUG(...)`, `ASSERT(...)`, and `TRACE(...)` with color-coded output and source location info.
+- `test.sh`: Script for stress testing your solution in `main.cpp` against generated inputs or a brute-force solution (if implemented).
+- `combine.sh`: Script to bundle `main.cpp`, `cp_utils.hpp`, and `debug_utils.hpp` into a single `submission_main.cpp` file, suitable for online judges.
+- `generate_input.py` (Optional): Example Python script for generating test inputs for `test.sh`.
+- `readme.md`: This file.
 
 ## Features
 
-- **C++20 Standard:** Leverages modern C++ features.
-- **Modular Design:** Core template in `template.cpp` (or your `main.cpp`), with debugging utilities (`ASSERT`, `TRACE`, `DEBUG`, etc.) neatly separated into `debug_utils.hpp`.
-- **Build Modes:**
-  - `PRACTICE + LOCAL`: Enables full debugging capabilities including `TRACE`, `DEBUG`, `ASSERT`, and brute-force checker. Compile with:
-    ```bash
-    g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL main.cpp debug_utils.hpp -o my
-    ```
-  - `PRACTICE` (only): For stress testing with `ASSERT` and brute-force, but without verbose `DEBUG` or `TRACE` outputs. Compile with:
-    ```bash
-    g++ -std=c++20 -O2 -Wall -DPRACTICE main.cpp debug_utils.hpp -o my
-    ```
-  - Contest Mode: Optimized for submission (no debug symbols or macros). Compile with:
-    ```bash
-    g++ -std=c++20 -O2 -Wall main.cpp -o submit
-    ```
-- **Debugging Utilities (in `debug_utils.hpp`):**
-  - `DEBUG(...)`: Variadic macro for printing debug information with source location (file, line, function) and ANSI colors. Enabled by `-DLOCAL`.
-  - `TRACE(...)`: Similar to `DEBUG`, intended for tracing execution flow. Enabled by `-DLOCAL` and `-DPRACTICE`.
-  - `ASSERT(condition, message)`: Halts execution if a condition is false, printing a message. Enabled by `-DPRACTICE`.
-  - ANSI Color Codes: `RED`, `BLUE`, `GREEN`, `RESET` for enhanced `std::cerr` output.
-- **Brute-Force Checker:**
-  - `solve_brute_example(...)`: A placeholder function to implement a naive or brute-force solution.
-  - The `solve()` function includes a `#ifdef PRACTICE` block to compare the main solution's output with the brute-force solution's output for each test case.
-  - Logs include test case numbers for easier identification of failures.
-- **Standard Headers:** Includes `<bits/stdc++.h>` and common PBDS headers.
-- **Type Aliases:** Common type aliases like `ll` (long long), `vll` (vector<long long>), `pii` (pair<int, int>), etc.
-- **Constants:** Predefined constants like `MOD`, `INF`, `PI`.
-- **Modular Arithmetic:** `ModularOps` struct for operations under a modulus.
-- **Macros:** Shortcuts for common loops (`f`, `cf`, `rf`), vector operations (`all`, `sz`), and I/O (`YES`, `NO`).
-- **Fast I/O:** `FASTINOUT` macro.
-- **Generic I/O Helpers:** `read(...)` and `print(...)` variadic templates for easy input and output.
-- **Timer Utility:** `Timer` class for measuring execution time.
-- **Test Case Handling:** `main` function reads the number of test cases (`t`) and calls `solve(test_case_num)` for each.
+- **Modern C++20:** Leverages C++20 features.
+- **Modular Design:** Clean separation of problem-specific code (`main.cpp`) from common utilities (`cp_utils.hpp`) and debugging tools (`debug_utils.hpp`).
+- \*\*Build Modes & Debugging (via `cp_utils.hpp` & `debug_utils.hpp`):
+  - `PRACTICE + LOCAL` (-DPRACTICE -DLOCAL flags): Enables `TRACE`, `DEBUG`, `ASSERT`, and brute-force checker integration.
+  - `PRACTICE` only (-DPRACTICE flag): For stress testing with `ASSERT` and brute-force, no verbose `DEBUG`/`TRACE`.
+  - Contest Mode (e.g., `-DONLINE_JUDGE` flag, no debug defines): Debug macros become no-ops for minimal overhead.
+- **Comprehensive Utilities (in `cp_utils.hpp`):**
+  - Type Aliases: `ll`, `vll`, `pii`, `Mint`, etc.
+  - Constants: `MOD_CONST`, `INF`, `PI`, etc.
+  - Macros: For loops, vector ops, I/O shortcuts (`YES`/`NO`).
+  - Modular Arithmetic: `ModularOps` struct.
+  - Timer: `Timer` class.
+  - Utility Functions: `maximise`, `minimise`.
+  - Number Theory: Miller-Rabin `isPrime`, `isDivisible`, `isOdd`, etc.
+  - Generic I/O: Variadic `read` and `print`, `printv`.
+  - Fast I/O: `FASTINOUT` macro.
+- **Test Case Handling:** Standard `main` function reads `t` and calls `solve()` for each test case.
+- **Brute-Force Checker Hook:** `solve_brute_example()` in `main.cpp` for use with `PRACTICE` mode.
 
 ## How to Use
 
-1.  **Copy `template.cpp`** to your problem file (e.g., `main.cpp`).
-2.  **Ensure `debug_utils.hpp`** is in the same directory or your include path.
-3.  **Implement Logic:**
-    - Fill in the problem-specific logic within the `solve(int test_case_num)` function.
-    - If using the brute-force checker, implement `solve_brute_example(...)` with the naive approach.
-4.  **Compile:** Use the appropriate g++ flags based on your needs (see Build Modes).
-5.  **Run:**
-    - For local testing with input redirection: `./my < input.txt`
-    - For CPH-like extensions, ensure the extension is configured to call `solve()` for each test case.
+1.  **Setup:** Ensure `main.cpp`, `cp_utils.hpp`, `debug_utils.hpp`, `test.sh`, and `combine.sh` are in your project directory. Make scripts executable (`chmod +x test.sh combine.sh`).
+2.  **Implement Logic:** Write your solution in the `solve(int test_case_num)` function in `main.cpp`. If using brute-force checks, also implement `solve_brute_example(...)` in `main.cpp`.
+3.  **Local Debugging & Testing:**
+    ```bash
+    # Compile for full debug features
+    g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL main.cpp -o my
+    ./my < input.txt
+    ```
+4.  **Stress Testing:**
+    ```bash
+    # Compile for stress testing (asserts active, less spam)
+    g++ -std=c++20 -O2 -Wall -DPRACTICE main.cpp -o my_solution # test.sh uses my_solution by default
+    ./test.sh <num_tests_optional>
+    ```
+5.  **Prepare for Submission:**
+    ```bash
+    ./combine.sh main.cpp
+    ```
+    This creates `submission_main.cpp`.
+6.  **Submit to Online Judge:** Upload the generated `submission_main.cpp`. The judge will compile it (usually with `-DONLINE_JUDGE` and no debug flags).
+    Example contest compile command: `g++ -std=c++20 -O2 -Wall -DONLINE_JUDGE submission_main.cpp -o solution`
 
 ### Configuring Your Editor/IDE for Running (e.g., VS Code)
 
-If you use a code runner extension in your editor (like "Code Runner" in VS Code), you'll want to configure its C++ execution command to correctly compile and run this template with debugging features enabled.
+If you use a code runner extension (like "Code Runner" in VS Code), configure its C++ execution command for `main.cpp`:
 
 **Example for VS Code's "Code Runner" extension (`settings.json`):**
 
-Modify your `settings.json` by adding/updating the `code-runner.executorMap` for C++:
-
 ```json
 "code-runner.executorMap": {
-    "cpp": "cd $dir && g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL $fileName debug_utils.hpp -o $fileNameWithoutExt && $dir/$fileNameWithoutExt"
+    "cpp": "cd $dir && g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL $fileName -o $fileNameWithoutExt && $dir/$fileNameWithoutExt < input.txt"
 }
 ```
 
-This command ensures:
-
-- Compilation occurs in the current file's directory (`cd $dir`).
-- C++20 standard is used with common flags (`-std=c++20 -O2 -Wall`).
-- Debugging defines (`-DPRACTICE -DLOCAL`) are active.
-- Both your source file (`$fileName`) and `debug_utils.hpp` are part of the compilation.
-- The program is executed if compilation succeeds.
-
-Remember to adjust if your source file isn't named `main.cpp` (the `$fileName` variable usually handles this automatically) and ensure `debug_utils.hpp` is in the same directory as `$fileName`.
+This command ensures `main.cpp` is compiled with debugging defines and linked with utilities from included headers, then runs it with input from `input.txt`.
 
 ## Customization
 
-- Modify `solve_brute_example` for each problem.
-- Adjust constants, type aliases, or add new helper functions as needed.
-- The `TRACE` and `DEBUG` macros output to `std::cerr`.
+- Modify `solve_brute_example` in `main.cpp` for each problem.
+- Adjust utilities in `cp_utils.hpp` or add new ones as needed.
 
-This template aims to streamline the competitive programming workflow by providing a feature-rich and configurable base.
+This template aims to streamline the competitive programming workflow by providing a feature-rich, modular, and configurable base.
