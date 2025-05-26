@@ -10,7 +10,7 @@ MAIN_CPP_FILE=${1:-$DEFAULT_MAIN_CPP_FILE}
 CP_UTILS_HEADER_FILE="cp_utils.hpp"
 DEBUG_UTILS_HEADER_FILE="debug_utils.hpp" # Added for clarity
 
-CP_UTILS_INCLUDE_DIRECTIVE='#include "cp_utils.hpp"'
+CP_UTILS_INCLUDE_DIRECTIVE='#include "cp_utils.hpp" // Core utilities, macros, and type aliases'
 # Updated to match the exact line in cp_utils.hpp, including the comment
 DEBUG_UTILS_INCLUDE_DIRECTIVE='#include "debug_utils.hpp" // Include the debug header'
 

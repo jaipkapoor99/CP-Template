@@ -53,7 +53,7 @@ This template provides a robust starting point for C++20 competitive programming
     ```bash
     ./combine.sh main.cpp
     ```
-    This creates `submission_main.cpp`.
+    This creates `submission_main.cpp`. The script automatically finds and bundles `cp_utils.hpp` (which includes `debug_utils.hpp`) with `main.cpp`.
 6.  **Submit to Online Judge:** Upload the generated `submission_main.cpp`. The judge will compile it (usually with `-DONLINE_JUDGE` and no debug flags).
     Example contest compile command: `g++ -std=c++20 -O2 -Wall -DONLINE_JUDGE submission_main.cpp -o solution`
 
