@@ -47,9 +47,9 @@ using umap = unordered_map<K, V>;
 
 // ──────────────────── CONSTANTS ────────────────────────
 constexpr int MOD_CONST = 1'000'000'007; // Renamed to avoid conflict if MOD is a macro elsewhere
-constexpr int MOD1_CONST = 998'244'353; // Renamed
+constexpr int MOD1_CONST = 998'244'353;  // Renamed
 #define SPACE ' '
-#define NL '\n'
+#define NL '\n' // Corrected from ' ' to '\n'
 constexpr double EPS = 1e-9;
 
 #if __cplusplus >= 202002L && defined(__cpp_lib_numbers)
@@ -153,85 +153,109 @@ public:
 
 // ───────────────── UTILITY FUNCTIONS ────────────────────
 template <typename T_ref, typename... T_vals>
-void maximise(T_ref &target, const T_vals&... vals) {
-    ( (void)(target = std::max(target, vals)), ... );
+void maximise(T_ref &target, const T_vals &...vals)
+{
+    ((void)(target = std::max(target, vals)), ...);
 }
 
 template <typename T_ref, typename... T_vals>
-void minimise(T_ref &target, const T_vals&... vals) {
-    ( (void)(target = std::min(target, vals)), ... );
+void minimise(T_ref &target, const T_vals &...vals)
+{
+    ((void)(target = std::min(target, vals)), ...);
 }
 
 // ───────────────── NUMBER THEORY UTILITIES ────────────────────
 // Note: These `mul` and `power` are specific to Miller-Rabin and use dynamic modulus.
 // They are distinct from ModularOps::mul and ModularOps::power.
-ll nt_mul(ll a, ll b, ll m) { // nt_ for number theory
-    if (b == 0) return 0;
+ll nt_mul(ll a, ll b, ll m)
+{ // nt_ for number theory
+    if (b == 0)
+        return 0;
     unsigned __int128 res = (unsigned __int128)a * b;
-    if (m == 0) {
-        if (res == 0) return 0;
-        return -1; 
+    if (m == 0)
+    {
+        if (res == 0)
+            return 0;
+        return -1;
     }
     return res % m;
 }
 
-ll nt_power(ll base, ll exp, ll mod) { // nt_ for number theory
+ll nt_power(ll base, ll exp, ll mod)
+{ // nt_ for number theory
     ll res = 1;
-    base = (base % mod + mod) % mod; 
-    while (exp > 0) {
-        if (exp % 2 == 1) res = nt_mul(res, base, mod);
+    base = (base % mod + mod) % mod;
+    while (exp > 0)
+    {
+        if (exp % 2 == 1)
+            res = nt_mul(res, base, mod);
         base = nt_mul(base, base, mod);
         exp /= 2;
     }
     return res;
 }
 
-bool check_composite(ll n, ll a, ll d, int s) {
+bool check_composite(ll n, ll a, ll d, int s)
+{
     ll x = nt_power(a, d, n);
-    if (x == 1 || x == n - 1) {
-        return false; 
+    if (x == 1 || x == n - 1)
+    {
+        return false;
     }
-    f(r, 1, s) { 
+    f(r, 1, s)
+    {
         x = nt_mul(x, x, n);
-        if (x == n - 1) {
-            return false; 
+        if (x == n - 1)
+        {
+            return false;
         }
     }
-    return true; 
+    return true;
 }
 
-bool isPrime(ll n) {
-    if (n < 2) return false;
+bool isPrime(ll n)
+{
+    if (n < 2)
+        return false;
     ll bases[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37};
-    forV(bases) { 
-        if (n == e) return true; 
+    forV(bases)
+    {
+        if (n == e)
+            return true;
     }
-    if (n % 2 == 0 || n % 3 == 0) return false; 
+    if (n % 2 == 0 || n % 3 == 0)
+        return false;
     ll d = n - 1;
     int s = 0;
-    while (d % 2 == 0) {
+    while (d % 2 == 0)
+    {
         d /= 2;
         s++;
     }
-    forV(bases) { 
-        if (check_composite(n, e, d, s)) {
-            return false; 
+    forV(bases)
+    {
+        if (check_composite(n, e, d, s))
+        {
+            return false;
         }
     }
-    return true; 
+    return true;
 }
 
 template <typename T1, typename T2>
-bool isDivisible(T1 n, T2 divisor) {
-    if (divisor == 0) { 
-        return false; 
+bool isDivisible(T1 n, T2 divisor)
+{
+    if (divisor == 0)
+    {
+        return false;
     }
     return (n % divisor == 0);
 }
 
 template <typename T>
-bool isOdd(T n) {
-    return !isDivisible(n, 2); 
+bool isOdd(T n)
+{
+    return !isDivisible(n, 2);
 }
 
 // ──────────── GENERIC INPUT/OUTPUT HELPERS ─────────────
@@ -245,8 +269,9 @@ void read(T &first, Args &...args)
 template <typename T>
 void read(vector<T> &v)
 {
-    forV(v) 
-        cin >> e;
+    forV(v)
+            cin >>
+        e;
 }
 
 template <typename T, typename... Args>
@@ -254,15 +279,16 @@ void print(const T &first, const Args &...args)
 {
     cout << first;
     ((cout << SPACE << args), ...);
-    cout << NL; 
+    cout << NL;
 }
 
 template <typename T>
 void printv(const vector<T> &v)
 {
-    forV(v) 
-        cout << e << SPACE;
+    forV(v)
+            cout
+        << e << SPACE;
     cout << NL;
 }
 
-#endif // CP_UTILS_HPP 
+#endif // CP_UTILS_HPP
