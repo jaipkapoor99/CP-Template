@@ -164,6 +164,29 @@ void minimise(T_ref &target, const T_vals &...vals)
     ((void)(target = std::min(target, vals)), ...);
 }
 
+// ────────────── EXAMPLE BRUTE SOLVER (edit per task) ──────────────
+//  Only enabled in PRACTICE builds, never contest.
+#ifdef PRACTICE
+// Note: This function is intended to be defined by the user for each problem.
+// It's placed in cp_utils.hpp for organizational purposes and to be bundled by combine.sh.
+// The actual implementation will typically be problem-specific.
+// The solve() function in main.cpp can then call this (conditionally, under #ifdef PRACTICE)
+// to compare results.
+
+// Example signature, modify as needed for the specific problem's input variables.
+ll solve_brute_example(int n_param /*, const vll& a_param if needed */)
+{
+    // Replace with your own O(N^3)/brute solution for the current problem.
+    // This is just a placeholder.
+    // TODO: Implement your problem-specific brute-force logic here.
+    ll ans = 0;
+    // Example: cf(i, 1, n_param) ans += i;
+    // TRACE("Brute force called with n_param:", n_param);
+    // ASSERT(n_param < 1000, "Brute force input too large, might be slow.");
+    return ans;
+}
+#endif
+
 // ───────────────── NUMBER THEORY UTILITIES ────────────────────
 // Note: These `mul` and `power` are specific to Miller-Rabin and use dynamic modulus.
 // They are distinct from ModularOps::mul and ModularOps::power.

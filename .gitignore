@@ -14,3 +14,8 @@ tempCodeRunnerFile.cpp
 .cph/
 .cph_settings/
 .cph_cache/
+
+# Test directory and backup files
+script_test/
+*_backup.cpp
+*_backup.hpp

@@ -17,19 +17,6 @@
 // The main cp_utils.hpp includes <bits/stdc++.h>, debug_utils.hpp, and other necessary headers.
 // It also brings in `using namespace std;` and `using namespace __gnu_pbds;`.
 
-// ────────────── EXAMPLE BRUTE SOLVER (edit per task) ──────────────
-//  Only enabled in PRACTICE builds, never contest.
-#ifdef PRACTICE
-ll solve_brute_example(int n_param /*, const vll& a_param if needed */) // Example signature
-{
-    // Replace with your own O(N^3)/brute solution.
-    // TODO: Implement your brute-force logic here.
-    ll ans = 0;
-    // Example: cf(i, 1, n_param) ans += i;
-    return ans;
-}
-#endif
-
 // ───────────────── SOLVE FUNCTION ──────────────────────
 //  Your main code lives here.
 //  This function handles a single test case: reads input, computes, and prints output
@@ -47,27 +34,15 @@ void solve(int test_case_num) // Added test_case_num parameter
     
     // --- PRACTICE Block: Compare with brute-force solution ---
 #ifdef PRACTICE
-    // TODO: Adjust the input to solve_brute_example if necessary
-    // ll ref_ans = solve_brute_example(n /*, a if needed */);
-    // ll actual_solution_ans = 0; // Replace with your actual solution variable
-    // if (actual_solution_ans != ref_ans)
-    // {
-    //     TRACE("ASSERTION FAILED (Test Case #", test_case_num, "): Mismatch with brute force solution.");
-    //     TRACE("Input (n):", n);
-    //     // TRACE("Vector a:", a); 
-    //     TRACE("Your Answer (actual_solution_ans):", actual_solution_ans);
-    //     TRACE("Brute Force Answer (ref_ans):", ref_ans);
-    //     ASSERT(actual_solution_ans == ref_ans, "Solution mismatch with brute force."); // ASSERT from debug_utils.hpp
-    // }
-    // else
-    // {
-    //     TRACE("PRACTICE (Test Case #", test_case_num, "): Brute force check passed for n: ", n, " ans: ", actual_solution_ans);
-    // }
+    // TODO: (If needed) Add any specific PRACTICE mode logic here that is NOT part of solve_brute_example.
+    // For example, you might want to call solve_brute_example from cp_utils.hpp
+    // with appropriate parameters and then compare its result with your main solution.
+    // ll brute_ans = solve_brute_example(n /*, potentially other params */);
+    // ASSERT(your_solution_ans == brute_ans, "Mismatch with brute force!");
 #endif
 
     // --- Example: Print output for a single test case ---
     // print(actual_solution_ans); // print is from cp_utils.hpp
-    // TODO: Print the computed answer
 }
 
 // ────────────────────── MAIN ───────────────────────────
