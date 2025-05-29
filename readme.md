@@ -28,6 +28,8 @@ This template provides a robust starting point for C++20 competitive programming
   - Modular Arithmetic: `ModularOps` struct.
   - Timer: `Timer` class.
   - Utility Functions: `maximise`, `minimise`.
+  - Data Structures:
+    - Disjoint Set Union (DSU) / Union-Find: `DSU` struct.
   - Example Brute-Force Solver: `solve_brute_example` (user must implement problem-specific logic).
   - Number Theory: Miller-Rabin `isPrime`, `isDivisible`, `isOdd`, etc.
   - Generic I/O: Variadic `read` and `print`, `printv`.
@@ -66,23 +68,105 @@ This template provides a robust starting point for C++20 competitive programming
     ```
     This restores `main.cpp`, `cp_utils.hpp`, and `debug_utils.hpp` to their separate states.
 
-### Configuring Your Editor/IDE for Running (e.g., VS Code)
+### Configuring Your Editor/IDE (e.g., VS Code Global Settings)
 
-If you use a code runner extension (like "Code Runner" in VS Code), configure its C++ execution command. It should work fine with both attached and modular structures, as long as `main.cpp` is the entry point.
+For an optimal development experience with linting, IntelliSense, and code execution, it is recommended to configure your VS Code **global user settings**. This template is designed to work seamlessly with these global settings, removing the need for workspace-specific `.vscode/settings.json` or `.vscode/c_cpp_properties.json` files for this project.
 
-**Example for VS Code's "Code Runner" extension (`settings.json`):**
+**1. C/C++ Extension Configuration (Global `settings.json`):**
+
+To ensure correct C++20 IntelliSense, linting, and compilation, configure the Microsoft C/C++ extension by adding or updating the following in your global `settings.json` file (accessible via `Preferences: Open User Settings (JSON)` in the Command Palette):
 
 ```json
-"code-runner.executorMap": {
-    "cpp": "cd $dir && g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL $fileName -o $fileNameWithoutExt && $dir/$fileNameWithoutExt < input.txt"
+{
+  // ... your other global settings ...
+
+  "C_Cpp.default.compilerPath": "YOUR_PATH_TO_G++/MINGW/bin/g++.exe", // e.g., "C:/mingw64/bin/g++.exe"
+  "C_Cpp.default.cppStandard": "c++20",
+  "C_Cpp.default.cStandard": "c17",
+  "C_Cpp.default.intelliSenseMode": "windows-gcc-x64", // Or your platform-specific mode e.g., "linux-gcc-x64", "macos-clang-x64"
+  "C_Cpp.default.includePath": [
+    // Add paths to your compiler's standard library includes if not found automatically
+    // e.g., "C:/mingw64/include/c++/your_version",
+    // "C:/mingw64/include/c++/your_version/x86_64-w64-mingw32",
+    // "C:/mingw64/include"
+  ],
+  "C_Cpp.default.defines": [
+    "_DEBUG",
+    "UNICODE",
+    "_UNICODE",
+    "PRACTICE", // For enabling asserts and brute-force checks
+    "LOCAL" // For enabling TRACE/DEBUG macros
+  ]
 }
 ```
 
-This command ensures `main.cpp` (whether attached or modular with includes) is compiled with debugging defines and then runs it with input from `input.txt`.
+_Replace `"YOUR_PATH_TO_G++/MINGW/bin/g++.exe"` and the example include paths with the actual paths for your MinGW (or other GCC-compatible) compiler installation. The `defines` for `PRACTICE` and `LOCAL` enable debugging features provided by this template._
+
+**2. Code Runner Extension Configuration (Global `settings.json`):**
+
+If you use the "Code Runner" extension, configure its C++ execution command in your global `settings.json` to match your environment (e.g., PowerShell on Windows, or bash on Linux/macOS). This command should compile `main.cpp` (which includes all necessary utilities) and run the executable with input from `input.txt`.
+
+_Example for PowerShell on Windows:_
+
+```json
+{
+  // ... your other global settings ...
+
+  "code-runner.executorMap": {
+    "cpp": "cd $dir; g++ -std=c++20 -Wall -O2 -DPRACTICE -DLOCAL '$fileName' -o '$fileNameWithoutExt.exe'; if ($?) { Get-Content ($dir + 'input.txt') | & ($dir + '$fileNameWithoutExt.exe') }"
+  }
+}
+```
+
+_Example for bash-like shells (Linux/macOS/WSL):_
+
+```json
+{
+  // ... your other global settings ...
+
+  "code-runner.executorMap": {
+    "cpp": "cd $dir && g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL $fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt < input.txt"
+  }
+}
+```
+
+_These commands ensure `main.cpp` is compiled with debugging defines and then run with input from `input.txt`._
+
+By setting these globally, any C++ project you open will benefit from a consistent environment without needing project-specific VS Code configuration files.
 
 ## Customization
 
 - Modify `solve_brute_example` in `cp_utils.hpp` for each problem.
 - Adjust utilities in `cp_utils.hpp` or add new ones as needed.
+
+## DSU (Union-Find) Usage Example
+
+```cpp
+// In cp_utils.hpp, the DSU struct is available.
+// To use it in main.cpp:
+
+#include "cp_utils.hpp"
+
+void solve(int test_case_num) {
+    int n = 5; // Number of elements
+    DSU dsu(n);
+
+    dsu.unite(0, 1);
+    dsu.unite(2, 3);
+    dsu.unite(0, 4);
+
+    DEBUG(dsu.connected(1, 4)); // true
+    DEBUG(dsu.connected(0, 2)); // false
+    DEBUG(dsu.size(0));         // 3 (elements 0, 1, 4 are in the same set)
+    DEBUG(dsu.num_sets());      // 2 (sets are {0,1,4} and {2,3})
+
+    dsu.add_element(); // Adds a 6th element (index 5)
+    dsu.unite(2,5);
+    DEBUG(dsu.num_sets()); // Still 2 sets, {0,1,4} and {2,3,5}
+    DEBUG(dsu.size(5)); // 3
+}
+
+// ... rest of main.cpp ...
+```
 
 This template aims to streamline the competitive programming workflow by providing a feature-rich, modular, and configurable base, adaptable for various tools and submission systems.

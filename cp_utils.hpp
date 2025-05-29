@@ -164,6 +164,76 @@ void minimise(T_ref &target, const T_vals &...vals)
     ((void)(target = std::min(target, vals)), ...);
 }
 
+// ───────────────── DATA STRUCTURES ────────────────────
+// Disjoint Set Union (DSU) / Union-Find
+struct DSU {
+    vi parent;
+    vi set_size;
+    int _num_sets;
+
+    DSU(int n = 0) : parent(n), set_size(n, 1), _num_sets(n) {
+        iota(all(parent), 0);
+    }
+
+    // Find the representative of the set containing x (with path compression)
+    int find(int x) {
+        ASSERT(x >= 0 && x < sz(parent), "DSU::find: Index out of bounds.");
+        if (parent[x] == x)
+            return x;
+        return parent[x] = find(parent[x]);
+    }
+
+    // Unite the sets containing x and y (union by size)
+    // Returns true if x and y were in different sets, false otherwise.
+    bool unite(int x, int y) {
+        ASSERT(x >= 0 && x < sz(parent) && y >= 0 && y < sz(parent), "DSU::unite: Index out of bounds.");
+        int rootX = find(x);
+        int rootY = find(y);
+        if (rootX != rootY) {
+            if (set_size[rootX] < set_size[rootY])
+                swap(rootX, rootY);
+            parent[rootY] = rootX;
+            set_size[rootX] += set_size[rootY];
+            _num_sets--;
+            return true;
+        }
+        return false;
+    }
+
+    // Check if x and y are in the same set
+    bool connected(int x, int y) {
+        ASSERT(x >= 0 && x < sz(parent) && y >= 0 && y < sz(parent), "DSU::connected: Index out of bounds.");
+        return find(x) == find(y);
+    }
+
+    // Get the size of the set containing x
+    int size(int x) {
+        ASSERT(x >= 0 && x < sz(parent), "DSU::size: Index out of bounds.");
+        return set_size[find(x)];
+    }
+
+    // Get the number of disjoint sets
+    int num_sets() const {
+        return _num_sets;
+    }
+
+    // Reset the DSU to n disjoint sets.
+    void reset(int n) {
+        parent.assign(n, 0);
+        iota(all(parent), 0);
+        set_size.assign(n, 1);
+        _num_sets = n;
+    }
+
+    // Add a new element as a new disjoint set.
+    // Useful if the number of elements is not known at construction.
+    void add_element() {
+        parent.pb(sz(parent));
+        set_size.pb(1);
+        _num_sets++;
+    }
+};
+
 // ────────────── EXAMPLE BRUTE SOLVER (edit per task) ──────────────
 //  Only enabled in PRACTICE builds, never contest.
 #ifdef PRACTICE
@@ -174,7 +244,7 @@ void minimise(T_ref &target, const T_vals &...vals)
 // to compare results.
 
 // Example signature, modify as needed for the specific problem's input variables.
-ll solve_brute_example(int n_param /*, const vll& a_param if needed */)
+inline ll solve_brute_example(int n_param /*, const vll& a_param if needed */)
 {
     // Replace with your own O(N^3)/brute solution for the current problem.
     // This is just a placeholder.
@@ -190,7 +260,7 @@ ll solve_brute_example(int n_param /*, const vll& a_param if needed */)
 // ───────────────── NUMBER THEORY UTILITIES ────────────────────
 // Note: These `mul` and `power` are specific to Miller-Rabin and use dynamic modulus.
 // They are distinct from ModularOps::mul and ModularOps::power.
-ll nt_mul(ll a, ll b, ll m)
+inline ll nt_mul(ll a, ll b, ll m)
 { // nt_ for number theory
     if (b == 0)
         return 0;
@@ -204,7 +274,7 @@ ll nt_mul(ll a, ll b, ll m)
     return res % m;
 }
 
-ll nt_power(ll base, ll exp, ll mod)
+inline ll nt_power(ll base, ll exp, ll mod)
 { // nt_ for number theory
     ll res = 1;
     base = (base % mod + mod) % mod;
@@ -218,7 +288,7 @@ ll nt_power(ll base, ll exp, ll mod)
     return res;
 }
 
-bool check_composite(ll n, ll a, ll d, int s)
+inline bool check_composite(ll n, ll a, ll d, int s)
 {
     ll x = nt_power(a, d, n);
     if (x == 1 || x == n - 1)
@@ -236,7 +306,7 @@ bool check_composite(ll n, ll a, ll d, int s)
     return true;
 }
 
-bool isPrime(ll n)
+inline bool isPrime(ll n)
 {
     if (n < 2)
         return false;
