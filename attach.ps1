@@ -41,7 +41,6 @@ try {
 
     # 2. Process cp_utils.hpp: embed debug_utils.hpp content where its include directive was
     $CP_UTILS_WITH_DEBUG_EMBEDDED = ""
-    $found_directive = $false
     
     $cp_utils_lines = Get-Content $CP_UTILS_HEADER_FILE
     foreach ($line in $cp_utils_lines) {
@@ -49,7 +48,6 @@ try {
             $CP_UTILS_WITH_DEBUG_EMBEDDED += $MARKER_DEBUG_UTILS_BEGIN + "`n"
             $CP_UTILS_WITH_DEBUG_EMBEDDED += $DEBUG_UTILS_CONTENT + "`n"
             $CP_UTILS_WITH_DEBUG_EMBEDDED += $MARKER_DEBUG_UTILS_END + "`n"
-            $found_directive = $true
         } else {
             $CP_UTILS_WITH_DEBUG_EMBEDDED += $line + "`n"
         }
@@ -63,7 +61,6 @@ try {
 
     # 3. Process main.cpp: embed the augmented cp_utils.hpp content where its include directive was
     $result_content = ""
-    $found_main_directive = $false
     
     $main_lines = Get-Content $MainCppFile
     foreach ($line in $main_lines) {
@@ -71,7 +68,6 @@ try {
             $result_content += $MARKER_CP_UTILS_BEGIN + "`n"
             $result_content += $CP_UTILS_WITH_DEBUG_EMBEDDED + "`n"
             $result_content += $MARKER_CP_UTILS_END + "`n"
-            $found_main_directive = $true
         } else {
             $result_content += $line + "`n"
         }

@@ -22,12 +22,6 @@ if (-not (Test-Path $MainCppFile)) {
     exit 1
 }
 
-# Create temporary files
-$TEMP_DEBUG_UTILS_CONTENT = [System.IO.Path]::GetTempFileName()
-$TEMP_CP_UTILS_CONTENT = [System.IO.Path]::GetTempFileName()
-$TEMP_MAIN_LEFTOVER_CONTENT = [System.IO.Path]::GetTempFileName()
-$PROCESSED_CP_UTILS_CONTENT = [System.IO.Path]::GetTempFileName()
-
 try {
     $main_content = Get-Content $MainCppFile
 
@@ -141,11 +135,4 @@ try {
 } catch {
     Write-Error "Error occurred during processing: $($_.Exception.Message)"
     exit 1
-} finally {
-    # Cleanup temporary files
-    @($TEMP_DEBUG_UTILS_CONTENT, $TEMP_CP_UTILS_CONTENT, $TEMP_MAIN_LEFTOVER_CONTENT, $PROCESSED_CP_UTILS_CONTENT) | ForEach-Object {
-        if (Test-Path $_) {
-            Remove-Item $_ -ErrorAction SilentlyContinue
-        }
-    }
 } 

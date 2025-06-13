@@ -81,7 +81,7 @@ print(n)
         if ($pythonProcess.ExitCode -ne 0) {
             Write-Error "Input generation failed!"
             if (-not $KEEP_FILES_ON_FAILURE) {
-                Remove-Item -Path "$EXECUTABLE_NAME.exe", $INPUT_FILE, $OUTPUT_FILE, $BRUTE_OUTPUT_FILE -ErrorAction SilentlyContinue
+                Remove-Item -Path "$EXECUTABLE_NAME.exe", $INPUT_FILE, $OUTPUT_FILE -ErrorAction SilentlyContinue
             }
             exit 1
         }
@@ -102,14 +102,14 @@ print(n)
             Write-Output "Input:"
             Get-Content $INPUT_FILE
             if (-not $KEEP_FILES_ON_FAILURE) {
-                Remove-Item -Path "$EXECUTABLE_NAME.exe", $INPUT_FILE, $OUTPUT_FILE, $BRUTE_OUTPUT_FILE -ErrorAction SilentlyContinue
+                Remove-Item -Path "$EXECUTABLE_NAME.exe", $INPUT_FILE, $OUTPUT_FILE -ErrorAction SilentlyContinue
             }
             exit 1
         }
     } catch {
         Write-Error "Failed to run solution: $($_.Exception.Message)"
         if (-not $KEEP_FILES_ON_FAILURE) {
-            Remove-Item -Path "$EXECUTABLE_NAME.exe", $INPUT_FILE, $OUTPUT_FILE, $BRUTE_OUTPUT_FILE -ErrorAction SilentlyContinue
+            Remove-Item -Path "$EXECUTABLE_NAME.exe", $INPUT_FILE, $OUTPUT_FILE -ErrorAction SilentlyContinue
         }
         exit 1
     }
@@ -155,7 +155,7 @@ Write-Output "All $PASSED_COUNT/$NumTests tests passed successfully!"
 if ($KEEP_FILES_ON_FAILURE -and ($PASSED_COUNT -ne $NumTests)) {
     Write-Output "Files kept for debugging: $INPUT_FILE, $OUTPUT_FILE"
 } else {
-    Remove-Item -Path "$EXECUTABLE_NAME.exe", $INPUT_FILE, $OUTPUT_FILE, $BRUTE_OUTPUT_FILE -ErrorAction SilentlyContinue
+    Remove-Item -Path "$EXECUTABLE_NAME.exe", $INPUT_FILE, $OUTPUT_FILE -ErrorAction SilentlyContinue
     # Optionally remove the python generator if it was auto-created and you don't want to keep it
     # if ((Test-Path $PYTHON_GENERATOR_SCRIPT) -and (Get-Content $PYTHON_GENERATOR_SCRIPT -Raw).Contains("Example: Generate a random number N")) {
     #     Remove-Item -Path $PYTHON_GENERATOR_SCRIPT -ErrorAction SilentlyContinue
