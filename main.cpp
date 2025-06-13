@@ -26,23 +26,23 @@ void solve(int test_case_num) // Added test_case_num parameter
     int n;
     read(n); // read is from cp_utils.hpp
     // TRACE("Test Case #", test_case_num, "Input n:", n); // TRACE is from debug_utils.hpp (via cp_utils.hpp)
-    // vll a(n); 
-    // read(a);      
-
+    
     // --- Example: Compute answer for a single test case ---
-    // TODO: Replace this with actual problem logic.
+    // Sum 1 to n using formula: n*(n+1)/2
+    ll result = (ll)n * (n + 1) / 2;
     
     // --- PRACTICE Block: Compare with brute-force solution ---
 #ifdef PRACTICE
-    // TODO: (If needed) Add any specific PRACTICE mode logic here that is NOT part of solve_brute_example.
-    // For example, you might want to call solve_brute_example from cp_utils.hpp
-    // with appropriate parameters and then compare its result with your main solution.
-    // ll brute_ans = solve_brute_example(n /*, potentially other params */);
-    // ASSERT(your_solution_ans == brute_ans, "Mismatch with brute force!");
+    // Internal brute force check using the formula vs loop
+    ll brute_result = 0;
+    for (int i = 1; i <= n; i++) {
+        brute_result += i;
+    }
+    ASSERT(result == brute_result, "Formula result doesn't match brute force loop!");
 #endif
 
     // --- Example: Print output for a single test case ---
-    // print(actual_solution_ans); // print is from cp_utils.hpp
+    print(result);
 }
 
 // ────────────────────── MAIN ───────────────────────────
