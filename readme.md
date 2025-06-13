@@ -1,6 +1,6 @@
 # Universal C++20 Competitive Programming Template
 
-A comprehensive, organized competitive programming template with modular design and Windows/PowerShell support.
+A comprehensive, cross-platform competitive programming template with modular design and support for both Windows (PowerShell) and Unix-like systems (Bash).
 
 ## 📁 Project Structure
 
@@ -12,10 +12,20 @@ CP-Template/
 │   ├── cp_utils.hpp      # Core utilities and algorithms
 │   └── debug_utils.hpp   # Debug macros and utilities
 ├── scripts/              # Automation scripts
-│   ├── attach.ps1        # Combine files for submission
-│   ├── detach.ps1        # Separate combined files
-│   ├── test.ps1          # Stress testing with brute force
-│   ├── cleanup.ps1       # Clean up generated/temporary files
+│   ├── attach            # Cross-platform attach wrapper
+│   ├── detach            # Cross-platform detach wrapper
+│   ├── cleanup           # Cross-platform cleanup wrapper
+│   ├── test              # Cross-platform test wrapper
+│   ├── windows/          # Windows-specific scripts (PowerShell)
+│   │   ├── attach.ps1    # Combine files for submission
+│   │   ├── detach.ps1    # Separate combined files
+│   │   ├── test.ps1      # Stress testing with brute force
+│   │   └── cleanup.ps1   # Clean up generated/temporary files
+│   ├── unix/             # Unix-specific scripts (Bash)
+│   │   ├── attach.sh     # Combine files for submission
+│   │   ├── detach.sh     # Separate combined files
+│   │   ├── test.sh       # Stress testing with brute force
+│   │   └── cleanup.sh    # Clean up generated/temporary files
 │   └── generate_input.py # Test case generation
 ├── tests/                # Test files
 │   └── test_components.cpp # Component testing
@@ -27,7 +37,8 @@ CP-Template/
 ## 🚀 Quick Start
 
 ### 1. **Local Development & Testing**
-```powershell
+
+```bash
 # Navigate to scripts directory
 cd scripts
 
@@ -38,48 +49,51 @@ g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL ../src/main.cpp -o ../my_solution
 echo "5" > ../input.txt
 ../my_solution < ../input.txt
 
-# Run stress testing with brute force comparison
-.\test.ps1 50
+# Run stress testing with brute force comparison (cross-platform)
+./test 50
 ```
 
 ### 2. **For Submission/CPH Tools**
-```powershell
-# From src/ directory - modifies main.cpp in-place
+
+```bash
+# From src/ directory - modifies main.cpp in-place (cross-platform)
 cd src
-../scripts/attach.ps1
+../scripts/attach
 
 # Or specify a different file
-../scripts/attach.ps1 solution.cpp
+../scripts/attach solution.cpp
 
 # From scripts/ directory - specify target file
 cd scripts
-.\attach.ps1 ../src/main.cpp
+./attach ../src/main.cpp
 ```
 
 ### 3. **Return to Modular Structure**
-```powershell
-# From src/ directory - modifies main.cpp in-place
+
+```bash
+# From src/ directory - modifies main.cpp in-place (cross-platform)
 cd src
-../scripts/detach.ps1
+../scripts/detach
 
 # Or specify a different file
-../scripts/detach.ps1 solution.cpp
+../scripts/detach solution.cpp
 
 # From scripts/ directory - specify target file
 cd scripts
-.\detach.ps1 ../src/main.cpp
+./detach ../src/main.cpp
 ```
 
 ### 4. **Clean Up Generated Files**
-```powershell
-# Remove all temporary/generated files (can run from anywhere)
-scripts\cleanup.ps1
+
+```bash
+# Remove all temporary/generated files (can run from anywhere, cross-platform)
+scripts/cleanup
 
 # Force cleanup without confirmations
-scripts\cleanup.ps1 -Force
+scripts/cleanup --force
 
 # Verbose output to see what's being cleaned
-scripts\cleanup.ps1 -Verbose
+scripts/cleanup --verbose
 ```
 
 ## 🛠️ Key Features
@@ -88,25 +102,29 @@ scripts\cleanup.ps1 -Verbose
 - **🔧 Modular Design**: Easy to maintain and extend
 - **🧪 Comprehensive Testing**: Stress testing with brute force comparison
 - **📝 Rich Documentation**: Detailed examples and usage guides
-- **🖥️ Windows-First**: PowerShell scripts optimized for Windows development
+- **🌐 Cross-Platform**: Works on Windows (PowerShell), Linux, macOS, and WSL
+- **🖥️ Smart Platform Detection**: Automatically uses the right scripts for your environment
 - **⚡ Modern C++20**: Latest language features and optimizations
 
 ## 📖 Documentation
 
 For detailed documentation, examples, and usage guides, see:
+
 - **[Complete Documentation](docs/readme.md)** - Comprehensive guide with examples
 - **[Component Tests](tests/test_components.cpp)** - Usage examples for all utilities
 
 ## 🎯 Usage Patterns
 
 ### **Development Workflow**
+
 1. Edit `src/main.cpp` for your solution
-2. Use `scripts/test.ps1` for stress testing
-3. Navigate to `src/` and use `../scripts/attach.ps1` before submission
-4. Use `../scripts/detach.ps1` to return to modular structure
-5. Use `scripts/cleanup.ps1` to clean up generated files
+2. Use `scripts/test` for stress testing (cross-platform)
+3. Navigate to `src/` and use `../scripts/attach` before submission
+4. Use `../scripts/detach` to return to modular structure
+5. Use `scripts/cleanup` to clean up generated files
 
 ### **CodeRunner Configuration (Windows/MinGW)**
+
 ```json
 {
   "code-runner.executorMap": {
@@ -116,20 +134,48 @@ For detailed documentation, examples, and usage guides, see:
 ```
 
 **Note**: When using CodeRunner with the organized structure:
+
 - Place your `input.txt` in the same directory as the file you're running
 - For `src/main.cpp`, put `input.txt` in the `src/` folder
 - The output will be written to `output.txt` in the same directory
 
 ### **CPH (Competitive Programming Helper) Setup**
-1. Run `scripts/attach.ps1` to create single-file version
+
+1. Run `scripts/attach` to create single-file version (cross-platform)
 2. Configure CPH to use the combined `src/main.cpp`
-3. Use `scripts/detach.ps1` when returning to development
+3. Use `scripts/detach` when returning to development
+
+## 🌐 Platform-Specific Usage
+
+The template automatically detects your platform and uses the appropriate scripts:
+
+### **Cross-Platform Wrappers** (Recommended)
+
+```bash
+# These work on all platforms
+./scripts/attach
+./scripts/detach
+./scripts/cleanup
+./scripts/test
+```
+
+### **Direct Platform-Specific Usage**
+
+```bash
+# Windows (PowerShell)
+./scripts/windows/attach.ps1
+./scripts/windows/detach.ps1
+
+# Unix-like (Linux, macOS, WSL)
+./scripts/unix/attach.sh
+./scripts/unix/detach.sh
+```
 
 ## 🔧 Customization
 
 - **Test Generation**: Modify `scripts/generate_input.py` for your problem's input format
 - **Brute Force**: The stress testing script auto-generates `brute.cpp` templates
-- **Build Flags**: Adjust compilation flags in the PowerShell scripts as needed
+- **Build Flags**: Adjust compilation flags in both PowerShell and Bash scripts as needed
 
 ## 📚 What's Included
 
@@ -141,4 +187,4 @@ For detailed documentation, examples, and usage guides, see:
 
 ---
 
-**Happy Competitive Programming! 🏆** 
+**Happy Competitive Programming! 🏆**

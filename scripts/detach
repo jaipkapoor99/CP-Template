@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Cross-platform wrapper for detach script
+# Automatically detects the platform and calls the appropriate script
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Detect platform
+if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "cygwin" ]] || [[ -n "$WINDIR" ]]; then
+    # Windows environment
+    if command -v powershell &> /dev/null; then
+        powershell -ExecutionPolicy Bypass -File "$SCRIPT_DIR/windows/detach.ps1" "$@"
+    elif command -v pwsh &> /dev/null; then
+        pwsh -ExecutionPolicy Bypass -File "$SCRIPT_DIR/windows/detach.ps1" "$@"
+    else
+        echo "Error: PowerShell not found. Please install PowerShell or use the bash version." >&2
+        exit 1
+    fi
+else
+    # Unix-like environment (Linux, macOS, WSL)
+    "$SCRIPT_DIR/unix/detach.sh" "$@"
+fi 
