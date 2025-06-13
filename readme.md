@@ -6,9 +6,9 @@ A comprehensive, cross-platform competitive programming template with modular de
 
 ```
 CP-Template/
-├── src/                    # Source files
-│   └── main.cpp           # Main solution template
-├── include/               # Header files
+├── main.cpp              # Main solution file (root level for easy access)
+├── src/                  # Additional source files (if needed)
+├── include/              # Header files
 │   ├── cp_utils.hpp      # Core utilities and algorithms
 │   └── debug_utils.hpp   # Debug macros and utilities
 ├── scripts/              # Automation scripts
@@ -43,12 +43,12 @@ CP-Template/
 # Navigate to scripts directory
 cd scripts
 
-# Compile and test (from scripts folder)
-g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL ../src/main.cpp -o ../my_solution
+# Compile and test (from project root)
+g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL main.cpp -o my_solution
 
 # Create input.txt in root directory and run
-echo "5" > ../input.txt
-../my_solution < ../input.txt
+echo "5" > input.txt
+./my_solution < input.txt
 
 # Run stress testing with brute force comparison (cross-platform)
 ./common/test 50
@@ -57,31 +57,29 @@ echo "5" > ../input.txt
 ### 2. **For Submission/CPH Tools**
 
 ```bash
-# From src/ directory - modifies main.cpp in-place (cross-platform)
-cd src
-../scripts/common/attach
+# From project root - modifies main.cpp in-place (cross-platform)
+scripts/common/attach
 
 # Or specify a different file
-../scripts/common/attach solution.cpp
+scripts/common/attach solution.cpp
 
 # From scripts/ directory - specify target file
 cd scripts
-./common/attach ../src/main.cpp
+./common/attach ../main.cpp
 ```
 
 ### 3. **Return to Modular Structure**
 
 ```bash
-# From src/ directory - modifies main.cpp in-place (cross-platform)
-cd src
-../scripts/common/detach
+# From project root - modifies main.cpp in-place (cross-platform)
+scripts/common/detach
 
 # Or specify a different file
-../scripts/common/detach solution.cpp
+scripts/common/detach solution.cpp
 
 # From scripts/ directory - specify target file
 cd scripts
-./common/detach ../src/main.cpp
+./common/detach ../main.cpp
 ```
 
 ### 4. **Clean Up Generated Files**
@@ -120,10 +118,10 @@ For detailed documentation, examples, and usage guides, see:
 
 ### **Development Workflow**
 
-1. Edit `src/main.cpp` for your solution
+1. Edit `main.cpp` for your solution (now in root directory)
 2. Use `scripts/common/test` for stress testing (cross-platform)
-3. Navigate to `src/` and use `../scripts/common/attach` before submission
-4. Use `../scripts/common/detach` to return to modular structure
+3. Use `scripts/common/attach` before submission
+4. Use `scripts/common/detach` to return to modular structure
 5. Use `scripts/common/cleanup` to clean up generated files
 
 ### **CodeRunner Configuration (Windows/MinGW)**
@@ -138,14 +136,13 @@ For detailed documentation, examples, and usage guides, see:
 
 **Note**: When using CodeRunner with the organized structure:
 
-- Place your `input.txt` in the same directory as the file you're running
-- For `src/main.cpp`, put `input.txt` in the `src/` folder
+- Place your `input.txt` in the project root directory
 - The output will be written to `output.txt` in the same directory
 
 ### **CPH (Competitive Programming Helper) Setup**
 
 1. Run `scripts/common/attach` to create single-file version (cross-platform)
-2. Configure CPH to use the combined `src/main.cpp`
+2. Configure CPH to use the combined `main.cpp`
 3. Use `scripts/common/detach` when returning to development
 
 ## 🌐 Platform-Specific Usage
@@ -202,7 +199,7 @@ scripts/common/test -v
 
 ### **How Stress Testing Works**
 
-1. **Compiles your main solution** (`src/main.cpp`)
+1. **Compiles your main solution** (`main.cpp`)
 2. **Auto-generates brute force template** (`tests/brute.cpp`) if it doesn't exist
 3. **Compiles brute force solution** with the same problem logic but simpler approach
 4. **Generates random test cases** using inline generator or Python script

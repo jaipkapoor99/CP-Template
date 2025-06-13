@@ -30,7 +30,7 @@ if ($Help) {
     Write-Output "  .\test.ps1 -PythonGen -KeepFiles     # Use Python generator and keep files"
     Write-Output ""
     Write-Output "The script will:"
-    Write-Output "  1. Compile the main solution (../src/main.cpp)"
+    Write-Output "  1. Compile the main solution (main.cpp)"
     Write-Output "  2. Compile brute force solution (brute.cpp) if it exists"
     Write-Output "  3. Generate random test cases"
     Write-Output "  4. Compare outputs between main and brute force solutions"
@@ -45,7 +45,7 @@ $OPTIMIZATION_LEVEL = "-O2"
 $WARNING_FLAGS = "-Wall"
 $PRACTICE_DEFINE = "-DPRACTICE" # Enables asserts and internal brute-force checks
 $LOCAL_DEFINE = "-DLOCAL"       # Enables TRACE and DEBUG macros (optional)
-$SOURCE_FILE = "../src/main.cpp"
+$SOURCE_FILE = "main.cpp"
 $EXECUTABLE_NAME = "my_solution"
 $BRUTE_EXECUTABLE_NAME = "brute_solution"
 $INPUT_FILE = "input.txt"
@@ -61,6 +61,11 @@ $KEEP_FILES_ON_FAILURE = if ($KeepFiles) { $true } else { $true }
 
 # Brute force comparison mode
 $USE_BRUTE_FORCE_COMPARISON = if ($NoBrute) { $false } else { $true }
+
+# --- Change to project root directory ---
+$SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
+$PROJECT_ROOT = Split-Path -Parent (Split-Path -Parent $SCRIPT_DIR)
+Set-Location $PROJECT_ROOT
 
 # --- Compilation ---
 Write-Output "Compiling $SOURCE_FILE..."
@@ -94,7 +99,7 @@ if ($USE_BRUTE_FORCE_COMPARISON) {
         Write-Output "Creating template brute force file '$BRUTE_SOURCE_FILE'..."
         
         $bruteTemplate = @'
-#include "../include/cp_utils.hpp"
+#include "include/cp_utils.hpp"
 
 // TODO: Implement your brute force solution here
 // This should solve the same problem as main.cpp but with a simpler, slower approach

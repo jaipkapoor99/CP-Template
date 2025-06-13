@@ -13,7 +13,7 @@ OPTIMIZATION_LEVEL="-O2"
 WARNING_FLAGS="-Wall"
 PRACTICE_DEFINE="-DPRACTICE"  # Enables asserts and internal brute-force checks
 LOCAL_DEFINE="-DLOCAL"        # Enables TRACE and DEBUG macros (optional)
-SOURCE_FILE="../src/main.cpp"
+SOURCE_FILE="main.cpp"
 EXECUTABLE_NAME="my_solution"
 BRUTE_EXECUTABLE_NAME="brute_solution"
 INPUT_FILE="input.txt"
@@ -75,9 +75,9 @@ while [[ $# -gt 0 ]]; do
             echo "  $0 --no-brute -n 200         # Run 200 tests without brute force"
             echo "  $0 --python-gen --keep-files # Use Python generator and keep files"
             echo ""
-            echo "The script will:"
-            echo "  1. Compile the main solution (../src/main.cpp)"
-            echo "  2. Compile brute force solution (brute.cpp) if it exists"
+                         echo "The script will:"
+             echo "  1. Compile the main solution (main.cpp)"
+             echo "  2. Compile brute force solution (brute.cpp) if it exists"
             echo "  3. Generate random test cases"
             echo "  4. Compare outputs between main and brute force solutions"
             echo "  5. Report any mismatches or errors"
@@ -110,16 +110,12 @@ log_verbose() {
     fi
 }
 
-# --- Determine script directory and change to tests directory ---
+# --- Determine script directory and change to project root ---
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
 
-# Change to tests directory (create if it doesn't exist)
-TESTS_DIR="$PROJECT_ROOT/tests"
-if [ ! -d "$TESTS_DIR" ]; then
-    mkdir -p "$TESTS_DIR"
-fi
-cd "$TESTS_DIR"
+# Change to project root directory
+cd "$PROJECT_ROOT"
 
 # --- Compilation ---
 log_info "Compiling $SOURCE_FILE..."
@@ -148,8 +144,8 @@ if [ "$USE_BRUTE_FORCE_COMPARISON" = true ]; then
         log_warning "Brute force comparison enabled but '$BRUTE_SOURCE_FILE' not found."
         log_info "Creating template brute force file '$BRUTE_SOURCE_FILE'..."
         
-        cat > "$BRUTE_SOURCE_FILE" << 'EOF'
-#include "../include/cp_utils.hpp"
+                 cat > "$BRUTE_SOURCE_FILE" << 'EOF'
+#include "include/cp_utils.hpp"
 
 // TODO: Implement your brute force solution here
 // This should solve the same problem as main.cpp but with a simpler, slower approach
