@@ -102,6 +102,7 @@ This template provides a robust starting point for C++20 competitive programming
 - ```python
 
   ```
+
 - # Example: Generate N followed by N random numbers
 - n = random.randint(1, 10)
 - print(n)
@@ -161,21 +162,21 @@ _Replace `"YOUR_PATH_TO_G++/MINGW/bin/g++.exe"` and the example include paths wi
 
 **2. Code Runner Extension Configuration (Global `settings.json`):**
 
-If you use the "Code Runner" extension, configure its C++ execution command in your global `settings.json` to match your environment (e.g., PowerShell on Windows, or bash on Linux/macOS). This command should compile `main.cpp` (which includes all necessary utilities) and run the executable with input from `input.txt`.
+If you use the "Code Runner" extension, configure its C++ execution command in your global `settings.json` to match your environment. This command should compile `main.cpp` with debugging features enabled and run the executable with test input.
 
-_Example for PowerShell on Windows:_
+**For Windows with MinGW (PowerShell):**
 
 ```json
 {
   // ... your other global settings ...
 
   "code-runner.executorMap": {
-    "cpp": "cd $dir; g++ -std=c++20 -Wall -O2 -DPRACTICE -DLOCAL '$fileName' -o '$fileNameWithoutExt.exe'; if ($?) { Get-Content ($dir + 'input.txt') | & ($dir + '$fileNameWithoutExt.exe') }"
+    "cpp": "g++ -std=c++20 -Wall -O2 -DPRACTICE -DLOCAL $fileName -o $fileNameWithoutExt.exe; if ($?) { Get-Content input.txt | ./$fileNameWithoutExt.exe > output.txt }"
   }
 }
 ```
 
-_Example for bash-like shells (Linux/macOS/WSL):_
+**For Linux/macOS/WSL (bash):**
 
 ```json
 {
@@ -187,7 +188,15 @@ _Example for bash-like shells (Linux/macOS/WSL):_
 }
 ```
 
-_These commands ensure `main.cpp` is compiled with debugging defines and then run with input from `input.txt`._
+**Features of the Windows/MinGW command:**
+
+- Compiles with full debugging features (`-DPRACTICE -DLOCAL`)
+- Reads test cases from `input.txt` in the same directory
+- Outputs results to `output.txt`
+- Shows colored debug messages in the console
+- Uses forward slash path separator to avoid PowerShell escape issues
+
+_Create an `input.txt` file with your test cases in the same directory as your source file._
 
 By setting these globally, any C++ project you open will benefit from a consistent environment without needing project-specific VS Code configuration files.
 

@@ -91,6 +91,16 @@ HOW TO USE THIS TEMPLATE
     Configure CPH to use `main.cpp` as the main file. 
     The `solve()` function is identified for test case execution.
 
+**Using with CodeRunner (Windows/MinGW):**
+    Configure CodeRunner with the following command:
+    g++ -std=c++20 -Wall -O2 -DPRACTICE -DLOCAL $fileName -o $fileNameWithoutExt.exe; if ($?) { Get-Content input.txt | ./$fileNameWithoutExt.exe > output.txt }
+    
+    This will:
+    - Compile with full debug/practice features enabled
+    - Read test cases from input.txt 
+    - Output results to output.txt
+    - Show debug messages in console (colored)
+
 ─────────────────────────────────────────────────────────────
 Features:
 - Modern C++20.
