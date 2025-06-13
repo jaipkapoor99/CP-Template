@@ -44,16 +44,30 @@ echo "5" > ../input.txt
 
 ### 2. **For Submission/CPH Tools**
 ```powershell
-# Combine files into single submission file (from scripts folder)
-.\attach.ps1
+# From src/ directory - modifies main.cpp in-place
+cd src
+../scripts/attach.ps1
 
-# This creates a combined main.cpp in src/ ready for submission
+# Or specify a different file
+../scripts/attach.ps1 solution.cpp
+
+# From scripts/ directory - specify target file
+cd scripts
+.\attach.ps1 ../src/main.cpp
 ```
 
 ### 3. **Return to Modular Structure**
 ```powershell
-# Separate combined file back to modular structure (from scripts folder)
-.\detach.ps1
+# From src/ directory - modifies main.cpp in-place
+cd src
+../scripts/detach.ps1
+
+# Or specify a different file
+../scripts/detach.ps1 solution.cpp
+
+# From scripts/ directory - specify target file
+cd scripts
+.\detach.ps1 ../src/main.cpp
 ```
 
 ### 4. **Clean Up Generated Files**
@@ -88,8 +102,8 @@ For detailed documentation, examples, and usage guides, see:
 ### **Development Workflow**
 1. Edit `src/main.cpp` for your solution
 2. Use `scripts/test.ps1` for stress testing
-3. Use `scripts/attach.ps1` before submission
-4. Use `scripts/detach.ps1` to return to modular structure
+3. Navigate to `src/` and use `../scripts/attach.ps1` before submission
+4. Use `../scripts/detach.ps1` to return to modular structure
 5. Use `scripts/cleanup.ps1` to clean up generated files
 
 ### **CodeRunner Configuration (Windows/MinGW)**

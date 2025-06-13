@@ -2,11 +2,32 @@
 # This version is intended for use with tools like CPH that expect a single main file.
 
 param(
-    [string]$MainCppFile = "../src/main.cpp"
+    [string]$MainCppFile
 )
 
-$CP_UTILS_HEADER_FILE = "../include/cp_utils.hpp"
-$DEBUG_UTILS_HEADER_FILE = "../include/debug_utils.hpp"
+# If no file specified, use the current working directory's main.cpp
+if (-not $MainCppFile) {
+    $MainCppFile = "main.cpp"
+}
+
+# Determine paths relative to the main file's location
+$mainFileDir = Split-Path -Parent (Resolve-Path $MainCppFile -ErrorAction SilentlyContinue)
+if (-not $mainFileDir) {
+    $mainFileDir = Split-Path -Parent $MainCppFile
+    if (-not $mainFileDir) {
+        $mainFileDir = "."
+    }
+}
+
+# Calculate relative paths to include directory from main file's location
+$CP_UTILS_HEADER_FILE = Join-Path $mainFileDir "../include/cp_utils.hpp"
+$DEBUG_UTILS_HEADER_FILE = Join-Path $mainFileDir "../include/debug_utils.hpp"
+
+# If files don't exist with relative path, try from script directory
+if (-not (Test-Path $CP_UTILS_HEADER_FILE)) {
+    $CP_UTILS_HEADER_FILE = "../include/cp_utils.hpp"
+    $DEBUG_UTILS_HEADER_FILE = "../include/debug_utils.hpp"
+}
 
 $CP_UTILS_INCLUDE_DIRECTIVE = '#include "../include/cp_utils.hpp"'
 $DEBUG_UTILS_INCLUDE_DIRECTIVE = '#include "debug_utils.hpp"'
@@ -31,9 +52,6 @@ if (-not (Test-Path $DEBUG_UTILS_HEADER_FILE)) {
     Write-Error "Error: Debug utilities header file '$DEBUG_UTILS_HEADER_FILE' not found."
     exit 1
 }
-
-# Create a temporary file
-$TEMP_ATTACHED_FILE = [System.IO.Path]::GetTempFileName()
 
 try {
     # 1. Read debug_utils.hpp content for embedding
@@ -82,18 +100,12 @@ try {
         exit 1
     }
 
-    # Write result to temporary file, then move to replace original
-    $result_content | Out-File -FilePath $TEMP_ATTACHED_FILE -Encoding UTF8 -NoNewline
+    # Write result directly to the main file
+    $result_content | Out-File -FilePath $MainCppFile -Encoding UTF8 -NoNewline
 
-    # Replace original file
-    Move-Item $TEMP_ATTACHED_FILE $MainCppFile -Force
-
-    Write-Output "Successfully attached sources into '$MainCppFile' (overwritten)."
+    Write-Output "Successfully attached sources into '$MainCppFile' (modified in-place)."
 
 } catch {
     Write-Error "Error occurred during processing: $($_.Exception.Message)"
-    if (Test-Path $TEMP_ATTACHED_FILE) {
-        Remove-Item $TEMP_ATTACHED_FILE
-    }
     exit 1
 } 

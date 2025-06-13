@@ -2,11 +2,32 @@
 # It expects main.cpp to have been processed by the companion attach.ps1 script.
 
 param(
-    [string]$MainCppFile = "../src/main.cpp"
+    [string]$MainCppFile
 )
 
-$CP_UTILS_HEADER_FILE = "../include/cp_utils.hpp"
-$DEBUG_UTILS_HEADER_FILE = "../include/debug_utils.hpp"
+# If no file specified, use the current working directory's main.cpp
+if (-not $MainCppFile) {
+    $MainCppFile = "main.cpp"
+}
+
+# Determine paths relative to the main file's location
+$mainFileDir = Split-Path -Parent (Resolve-Path $MainCppFile -ErrorAction SilentlyContinue)
+if (-not $mainFileDir) {
+    $mainFileDir = Split-Path -Parent $MainCppFile
+    if (-not $mainFileDir) {
+        $mainFileDir = "."
+    }
+}
+
+# Calculate relative paths to include directory from main file's location
+$CP_UTILS_HEADER_FILE = Join-Path $mainFileDir "../include/cp_utils.hpp"
+$DEBUG_UTILS_HEADER_FILE = Join-Path $mainFileDir "../include/debug_utils.hpp"
+
+# If files don't exist with relative path, try from script directory
+if (-not (Test-Path $CP_UTILS_HEADER_FILE)) {
+    $CP_UTILS_HEADER_FILE = "../include/cp_utils.hpp"
+    $DEBUG_UTILS_HEADER_FILE = "../include/debug_utils.hpp"
+}
 
 $CP_UTILS_INCLUDE_DIRECTIVE = '#include "../include/cp_utils.hpp"'
 $DEBUG_UTILS_INCLUDE_DIRECTIVE = '#include "debug_utils.hpp"'
