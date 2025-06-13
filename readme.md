@@ -12,10 +12,11 @@ CP-Template/
 │   ├── cp_utils.hpp      # Core utilities and algorithms
 │   └── debug_utils.hpp   # Debug macros and utilities
 ├── scripts/              # Automation scripts
-│   ├── attach            # Cross-platform attach wrapper
-│   ├── detach            # Cross-platform detach wrapper
-│   ├── cleanup           # Cross-platform cleanup wrapper
-│   ├── test              # Cross-platform test wrapper
+│   ├── common/           # Cross-platform wrapper scripts
+│   │   ├── attach        # Cross-platform attach wrapper
+│   │   ├── detach        # Cross-platform detach wrapper
+│   │   ├── cleanup       # Cross-platform cleanup wrapper
+│   │   └── test          # Cross-platform test wrapper
 │   ├── windows/          # Windows-specific scripts (PowerShell)
 │   │   ├── attach.ps1    # Combine files for submission
 │   │   ├── detach.ps1    # Separate combined files
@@ -50,7 +51,7 @@ echo "5" > ../input.txt
 ../my_solution < ../input.txt
 
 # Run stress testing with brute force comparison (cross-platform)
-./test 50
+./common/test 50
 ```
 
 ### 2. **For Submission/CPH Tools**
@@ -58,14 +59,14 @@ echo "5" > ../input.txt
 ```bash
 # From src/ directory - modifies main.cpp in-place (cross-platform)
 cd src
-../scripts/attach
+../scripts/common/attach
 
 # Or specify a different file
-../scripts/attach solution.cpp
+../scripts/common/attach solution.cpp
 
 # From scripts/ directory - specify target file
 cd scripts
-./attach ../src/main.cpp
+./common/attach ../src/main.cpp
 ```
 
 ### 3. **Return to Modular Structure**
@@ -73,27 +74,27 @@ cd scripts
 ```bash
 # From src/ directory - modifies main.cpp in-place (cross-platform)
 cd src
-../scripts/detach
+../scripts/common/detach
 
 # Or specify a different file
-../scripts/detach solution.cpp
+../scripts/common/detach solution.cpp
 
 # From scripts/ directory - specify target file
 cd scripts
-./detach ../src/main.cpp
+./common/detach ../src/main.cpp
 ```
 
 ### 4. **Clean Up Generated Files**
 
 ```bash
 # Remove all temporary/generated files (can run from anywhere, cross-platform)
-scripts/cleanup
+scripts/common/cleanup
 
 # Force cleanup without confirmations
-scripts/cleanup --force
+scripts/common/cleanup --force
 
 # Verbose output to see what's being cleaned
-scripts/cleanup --verbose
+scripts/common/cleanup --verbose
 ```
 
 ## 🛠️ Key Features
@@ -118,10 +119,10 @@ For detailed documentation, examples, and usage guides, see:
 ### **Development Workflow**
 
 1. Edit `src/main.cpp` for your solution
-2. Use `scripts/test` for stress testing (cross-platform)
-3. Navigate to `src/` and use `../scripts/attach` before submission
-4. Use `../scripts/detach` to return to modular structure
-5. Use `scripts/cleanup` to clean up generated files
+2. Use `scripts/common/test` for stress testing (cross-platform)
+3. Navigate to `src/` and use `../scripts/common/attach` before submission
+4. Use `../scripts/common/detach` to return to modular structure
+5. Use `scripts/common/cleanup` to clean up generated files
 
 ### **CodeRunner Configuration (Windows/MinGW)**
 
@@ -141,9 +142,9 @@ For detailed documentation, examples, and usage guides, see:
 
 ### **CPH (Competitive Programming Helper) Setup**
 
-1. Run `scripts/attach` to create single-file version (cross-platform)
+1. Run `scripts/common/attach` to create single-file version (cross-platform)
 2. Configure CPH to use the combined `src/main.cpp`
-3. Use `scripts/detach` when returning to development
+3. Use `scripts/common/detach` when returning to development
 
 ## 🌐 Platform-Specific Usage
 
@@ -153,10 +154,10 @@ The template automatically detects your platform and uses the appropriate script
 
 ```bash
 # These work on all platforms
-./scripts/attach
-./scripts/detach
-./scripts/cleanup
-./scripts/test
+./scripts/common/attach
+./scripts/common/detach
+./scripts/common/cleanup
+./scripts/common/test
 ```
 
 ### **Direct Platform-Specific Usage**
