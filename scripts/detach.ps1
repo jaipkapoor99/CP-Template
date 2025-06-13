@@ -2,13 +2,13 @@
 # It expects main.cpp to have been processed by the companion attach.ps1 script.
 
 param(
-    [string]$MainCppFile = "main.cpp"
+    [string]$MainCppFile = "../src/main.cpp"
 )
 
-$CP_UTILS_HEADER_FILE = "cp_utils.hpp"
-$DEBUG_UTILS_HEADER_FILE = "debug_utils.hpp"
+$CP_UTILS_HEADER_FILE = "../include/cp_utils.hpp"
+$DEBUG_UTILS_HEADER_FILE = "../include/debug_utils.hpp"
 
-$CP_UTILS_INCLUDE_DIRECTIVE = '#include "cp_utils.hpp"'
+$CP_UTILS_INCLUDE_DIRECTIVE = '#include "../include/cp_utils.hpp"'
 $DEBUG_UTILS_INCLUDE_DIRECTIVE = '#include "debug_utils.hpp"'
 
 $MARKER_CP_UTILS_BEGIN = "// --- BEGIN CP UTILS ---"

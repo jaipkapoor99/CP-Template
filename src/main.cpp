@@ -12,7 +12,7 @@
       g++ -std=c++20 -O2 -Wall -DONLINE_JUDGE submission_main.cpp -o submit
 */
 
-#include "cp_utils.hpp" // Core utilities, macros, and type aliases
+#include "../include/cp_utils.hpp" // Core utilities, macros, and type aliases
 
 // The main cp_utils.hpp includes <bits/stdc++.h>, debug_utils.hpp, and other necessary headers.
 // It also brings in `using namespace std;` and `using namespace __gnu_pbds;`.

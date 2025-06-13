@@ -11,7 +11,7 @@ $OPTIMIZATION_LEVEL = "-O2"
 $WARNING_FLAGS = "-Wall"
 $PRACTICE_DEFINE = "-DPRACTICE" # Enables asserts and internal brute-force checks
 $LOCAL_DEFINE = "-DLOCAL"       # Enables TRACE and DEBUG macros (optional)
-$SOURCE_FILE = "main.cpp"
+$SOURCE_FILE = "../src/main.cpp"
 $EXECUTABLE_NAME = "my_solution"
 $BRUTE_EXECUTABLE_NAME = "brute_solution"
 $INPUT_FILE = "input.txt"
@@ -60,7 +60,7 @@ if ($USE_BRUTE_FORCE_COMPARISON) {
         Write-Output "Creating template brute force file '$BRUTE_SOURCE_FILE'..."
         
         $bruteTemplate = @'
-#include "cp_utils.hpp"
+#include "../include/cp_utils.hpp"
 
 // TODO: Implement your brute force solution here
 // This should solve the same problem as main.cpp but with a simpler, slower approach

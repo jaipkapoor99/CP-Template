@@ -1,4 +1,4 @@
-#include "cp_utils.hpp"
+#include "../include/cp_utils.hpp"
 using namespace std;
 
 void test_dsu()
