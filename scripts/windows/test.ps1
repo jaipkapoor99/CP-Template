@@ -1,8 +1,42 @@
 # PowerShell script for stress testing C++ competitive programming solutions
 
 param(
-    [int]$NumTests = 100
+    [int]$NumTests = 100,
+    [switch]$NoBrute,
+    [switch]$KeepFiles,
+    [switch]$PythonGen,
+    [switch]$Verbose,
+    [switch]$Help
 )
+
+# Show help if requested
+if ($Help) {
+    Write-Output "Usage: test.ps1 [OPTIONS]"
+    Write-Output ""
+    Write-Output "Stress testing script for C++ competitive programming solutions"
+    Write-Output ""
+    Write-Output "Options:"
+    Write-Output "  -NumTests N      Number of stress tests to run (default: 100)"
+    Write-Output "  -NoBrute         Disable brute force comparison"
+    Write-Output "  -KeepFiles       Keep test files on failure for debugging"
+    Write-Output "  -PythonGen       Use Python script for test case generation"
+    Write-Output "  -Verbose         Enable verbose output"
+    Write-Output "  -Help            Show this help message"
+    Write-Output ""
+    Write-Output "Examples:"
+    Write-Output "  .\test.ps1                           # Run 100 tests with default settings"
+    Write-Output "  .\test.ps1 -NumTests 50              # Run 50 stress tests"
+    Write-Output "  .\test.ps1 -NoBrute -NumTests 200    # Run 200 tests without brute force"
+    Write-Output "  .\test.ps1 -PythonGen -KeepFiles     # Use Python generator and keep files"
+    Write-Output ""
+    Write-Output "The script will:"
+    Write-Output "  1. Compile the main solution (../src/main.cpp)"
+    Write-Output "  2. Compile brute force solution (brute.cpp) if it exists"
+    Write-Output "  3. Generate random test cases"
+    Write-Output "  4. Compare outputs between main and brute force solutions"
+    Write-Output "  5. Report any mismatches or errors"
+    exit 0
+}
 
 # --- Configuration ---
 $COMPILER = "g++"
@@ -19,14 +53,14 @@ $OUTPUT_FILE = "output.txt"
 $BRUTE_OUTPUT_FILE = "brute_output.txt"
 
 # Test case generator configuration
-$GENERATOR_TYPE = "inline" # "inline" or "python"
+$GENERATOR_TYPE = if ($PythonGen) { "python" } else { "inline" }
 $PYTHON_GENERATOR_SCRIPT = "generate_input.py"
 
 # Set to $true to keep input/output files on failure for debugging
-$KEEP_FILES_ON_FAILURE = $true
+$KEEP_FILES_ON_FAILURE = if ($KeepFiles) { $true } else { $true }
 
 # Brute force comparison mode
-$USE_BRUTE_FORCE_COMPARISON = $true # Set to $false to use internal ASSERT-based checking only
+$USE_BRUTE_FORCE_COMPARISON = if ($NoBrute) { $false } else { $true }
 
 # --- Compilation ---
 Write-Output "Compiling $SOURCE_FILE..."
@@ -210,8 +244,12 @@ print(n)
         }
 
         # Compare outputs
-        $mainOutput = Get-Content $OUTPUT_FILE -Raw
-        $bruteOutput = Get-Content $BRUTE_OUTPUT_FILE -Raw
+        $mainOutput = Get-Content $OUTPUT_FILE -Raw -ErrorAction SilentlyContinue
+        $bruteOutput = Get-Content $BRUTE_OUTPUT_FILE -Raw -ErrorAction SilentlyContinue
+        
+        # Handle null/empty outputs
+        if ($null -eq $mainOutput) { $mainOutput = "" }
+        if ($null -eq $bruteOutput) { $bruteOutput = "" }
         
         # Normalize whitespace for comparison
         $mainOutput = $mainOutput.Trim() -replace '\r\n', "`n" -replace '\r', "`n"

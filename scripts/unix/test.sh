@@ -1,73 +1,86 @@
 #!/bin/bash
 
-# Comprehensive testing script for CP-Template
-# Compiles and tests C++ solutions with various input/output scenarios
+# Bash script for stress testing C++ competitive programming solutions
+# Enhanced version with brute force comparison capabilities
 
 set -e  # Exit on any error
 
-# Default values
-CPP_FILE=""
-INPUT_FILE=""
-EXPECTED_OUTPUT=""
+# --- Default Configuration ---
+NUM_TESTS=100
 COMPILER="g++"
-TIMEOUT=5
-VERBOSE=false
-CLEAN_AFTER=true
-COMPILE_FLAGS="-std=c++20 -O2 -Wall -Wextra"
+STD_VERSION="c++20"
+OPTIMIZATION_LEVEL="-O2"
+WARNING_FLAGS="-Wall"
+PRACTICE_DEFINE="-DPRACTICE"  # Enables asserts and internal brute-force checks
+LOCAL_DEFINE="-DLOCAL"        # Enables TRACE and DEBUG macros (optional)
+SOURCE_FILE="../src/main.cpp"
+EXECUTABLE_NAME="my_solution"
+BRUTE_EXECUTABLE_NAME="brute_solution"
+INPUT_FILE="input.txt"
+OUTPUT_FILE="output.txt"
+BRUTE_OUTPUT_FILE="brute_output.txt"
 
-# Parse command line arguments
+# Test case generator configuration
+GENERATOR_TYPE="inline"  # "inline" or "python"
+PYTHON_GENERATOR_SCRIPT="generate_input.py"
+
+# Set to true to keep input/output files on failure for debugging
+KEEP_FILES_ON_FAILURE=true
+
+# Brute force comparison mode
+USE_BRUTE_FORCE_COMPARISON=true  # Set to false to use internal ASSERT-based checking only
+
+# Verbose mode
+VERBOSE=false
+
+# --- Parse Command Line Arguments ---
 while [[ $# -gt 0 ]]; do
     case $1 in
-        -f|--file)
-            CPP_FILE="$2"
+        -n|--num-tests)
+            NUM_TESTS="$2"
             shift 2
             ;;
-        -i|--input)
-            INPUT_FILE="$2"
-            shift 2
+        --no-brute)
+            USE_BRUTE_FORCE_COMPARISON=false
+            shift
             ;;
-        -o|--output)
-            EXPECTED_OUTPUT="$2"
-            shift 2
+        --keep-files)
+            KEEP_FILES_ON_FAILURE=true
+            shift
             ;;
-        -c|--compiler)
-            COMPILER="$2"
-            shift 2
-            ;;
-        -t|--timeout)
-            TIMEOUT="$2"
-            shift 2
+        --python-gen)
+            GENERATOR_TYPE="python"
+            shift
             ;;
         -v|--verbose)
             VERBOSE=true
             shift
             ;;
-        --no-clean)
-            CLEAN_AFTER=false
-            shift
-            ;;
-        --flags)
-            COMPILE_FLAGS="$2"
-            shift 2
-            ;;
         -h|--help)
             echo "Usage: $0 [OPTIONS]"
             echo ""
+            echo "Stress testing script for C++ competitive programming solutions"
+            echo ""
             echo "Options:"
-            echo "  -f, --file FILE       C++ file to test (default: auto-detect)"
-            echo "  -i, --input FILE      Input file for testing"
-            echo "  -o, --output FILE     Expected output file"
-            echo "  -c, --compiler CMD    Compiler to use (default: g++)"
-            echo "  -t, --timeout SEC     Execution timeout in seconds (default: 5)"
-            echo "  -v, --verbose         Show detailed output"
-            echo "  --no-clean           Don't clean up executable after testing"
-            echo "  --flags FLAGS        Custom compilation flags"
+            echo "  -n, --num-tests N     Number of stress tests to run (default: 100)"
+            echo "  --no-brute           Disable brute force comparison"
+            echo "  --keep-files         Keep test files on failure for debugging"
+            echo "  --python-gen         Use Python script for test case generation"
+            echo "  -v, --verbose        Enable verbose output"
             echo "  -h, --help           Show this help message"
             echo ""
             echo "Examples:"
-            echo "  $0                                    # Test auto-detected file"
-            echo "  $0 -f solution.cpp -i input.txt      # Test specific file with input"
-            echo "  $0 -f main.cpp -i in.txt -o out.txt  # Test with expected output"
+            echo "  $0                           # Run 100 tests with default settings"
+            echo "  $0 -n 50                     # Run 50 stress tests"
+            echo "  $0 --no-brute -n 200         # Run 200 tests without brute force"
+            echo "  $0 --python-gen --keep-files # Use Python generator and keep files"
+            echo ""
+            echo "The script will:"
+            echo "  1. Compile the main solution (../src/main.cpp)"
+            echo "  2. Compile brute force solution (brute.cpp) if it exists"
+            echo "  3. Generate random test cases"
+            echo "  4. Compare outputs between main and brute force solutions"
+            echo "  5. Report any mismatches or errors"
             exit 0
             ;;
         *)
@@ -78,12 +91,18 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Determine script and project root directories
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+# --- Helper Functions ---
+log_info() {
+    echo "$1"
+}
 
-# Change to project root
-cd "$PROJECT_ROOT"
+log_error() {
+    echo "ERROR: $1" >&2
+}
+
+log_warning() {
+    echo "WARNING: $1"
+}
 
 log_verbose() {
     if [ "$VERBOSE" = true ]; then
@@ -91,186 +110,202 @@ log_verbose() {
     fi
 }
 
-log_info() {
-    echo "ℹ️  $1"
-}
+# --- Determine script directory and change to tests directory ---
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
 
-log_success() {
-    echo "✅ $1"
-}
-
-log_error() {
-    echo "❌ $1" >&2
-}
-
-log_warning() {
-    echo "⚠️  $1"
-}
-
-# Auto-detect C++ file if not specified
-if [ -z "$CPP_FILE" ]; then
-    # Look for main.cpp first, then any .cpp file
-    if [ -f "src/main.cpp" ]; then
-        CPP_FILE="src/main.cpp"
-    elif [ -f "main.cpp" ]; then
-        CPP_FILE="main.cpp"
-    else
-        # Find first .cpp file
-        CPP_FILE=$(find . -maxdepth 2 -name "*.cpp" -type f | head -1)
-        if [ -z "$CPP_FILE" ]; then
-            log_error "No C++ file found. Please specify with -f option."
-            exit 1
-        fi
-    fi
-    log_info "Auto-detected C++ file: $CPP_FILE"
+# Change to tests directory (create if it doesn't exist)
+TESTS_DIR="$PROJECT_ROOT/tests"
+if [ ! -d "$TESTS_DIR" ]; then
+    mkdir -p "$TESTS_DIR"
 fi
+cd "$TESTS_DIR"
 
-# Verify C++ file exists
-if [ ! -f "$CPP_FILE" ]; then
-    log_error "C++ file '$CPP_FILE' not found."
-    exit 1
-fi
+# --- Compilation ---
+log_info "Compiling $SOURCE_FILE..."
 
-# Generate executable name
-EXECUTABLE="${CPP_FILE%.*}"
-if [[ "$EXECUTABLE" == *"/"* ]]; then
-    EXECUTABLE="$(basename "$EXECUTABLE")"
-fi
+compile_args=(
+    "-std=$STD_VERSION"
+    "$OPTIMIZATION_LEVEL"
+    "$WARNING_FLAGS"
+    "$PRACTICE_DEFINE"
+    "$LOCAL_DEFINE"
+    "$SOURCE_FILE"
+    "-o"
+    "$EXECUTABLE_NAME"
+)
 
-echo "🚀 CP-Template Testing Script"
-echo "================================"
-echo "File: $CPP_FILE"
-echo "Compiler: $COMPILER"
-echo "Flags: $COMPILE_FLAGS"
-echo "Timeout: ${TIMEOUT}s"
-echo ""
-
-# Compilation phase
-log_info "Compiling $CPP_FILE..."
-log_verbose "Command: $COMPILER $COMPILE_FLAGS -o $EXECUTABLE $CPP_FILE"
-
-if ! $COMPILER $COMPILE_FLAGS -o "$EXECUTABLE" "$CPP_FILE" 2>&1; then
+if ! "$COMPILER" "${compile_args[@]}" 2>&1; then
     log_error "Compilation failed!"
     exit 1
 fi
+log_info "Compilation successful."
 
-log_success "Compilation successful!"
+# --- Compile Brute Force Solution (if using brute force comparison) ---
+if [ "$USE_BRUTE_FORCE_COMPARISON" = true ]; then
+    BRUTE_SOURCE_FILE="brute.cpp"
+    if [ ! -f "$BRUTE_SOURCE_FILE" ]; then
+        log_warning "Brute force comparison enabled but '$BRUTE_SOURCE_FILE' not found."
+        log_info "Creating template brute force file '$BRUTE_SOURCE_FILE'..."
+        
+        cat > "$BRUTE_SOURCE_FILE" << 'EOF'
+#include "../include/cp_utils.hpp"
 
-# Cleanup function
-cleanup() {
-    if [ "$CLEAN_AFTER" = true ] && [ -f "$EXECUTABLE" ]; then
-        log_verbose "Cleaning up executable: $EXECUTABLE"
-        rm -f "$EXECUTABLE"
+// TODO: Implement your brute force solution here
+// This should solve the same problem as main.cpp but with a simpler, slower approach
+void solve_brute(int test_case_num) 
+{
+    int n;
+    read(n);
+    
+    // Example brute force: sum 1 to n using a loop instead of formula
+    ll result = 0;
+    for (int i = 1; i <= n; i++) {
+        result += i;
+    }
+    
+    print(result);
+}
+
+int main()
+{
+    FASTINOUT;
+    int t;
+    read(t);
+    
+    f(i, 0, t)
+        solve_brute(i + 1);
+        
+    return 0;
+}
+EOF
+        log_info "Template brute force file created. Please implement your brute force logic."
+    fi
+    
+    log_info "Compiling brute force solution..."
+    brute_compile_args=(
+        "-std=$STD_VERSION"
+        "$OPTIMIZATION_LEVEL"
+        "$WARNING_FLAGS"
+        "$PRACTICE_DEFINE"
+        "$LOCAL_DEFINE"
+        "$BRUTE_SOURCE_FILE"
+        "-o"
+        "$BRUTE_EXECUTABLE_NAME"
+    )
+    
+    if ! "$COMPILER" "${brute_compile_args[@]}" 2>&1; then
+        log_error "Brute force compilation failed!"
+        exit 1
+    fi
+    log_info "Brute force compilation successful."
+fi
+
+# --- Cleanup function ---
+cleanup_files() {
+    if [ "$KEEP_FILES_ON_FAILURE" = true ] && [ "$1" != "success" ]; then
+        log_info "Files kept for debugging: $INPUT_FILE, $OUTPUT_FILE, $BRUTE_OUTPUT_FILE"
+    else
+        rm -f "$EXECUTABLE_NAME" "$BRUTE_EXECUTABLE_NAME" "$INPUT_FILE" "$OUTPUT_FILE" "$BRUTE_OUTPUT_FILE" 2>/dev/null || true
     fi
 }
 
 # Set up cleanup trap
-trap cleanup EXIT
+trap 'cleanup_files "failure"' EXIT
 
-# Testing phase
-echo ""
-log_info "Starting tests..."
+# --- Stress Testing ---
+log_info "Running $NUM_TESTS stress tests..."
+PASSED_COUNT=0
 
-# Test 1: Basic execution (no input file)
-if [ -z "$INPUT_FILE" ]; then
-    echo ""
-    echo "📝 Test 1: Interactive/Manual Input"
-    echo "Enter your input (Ctrl+D to finish):"
-    
-    if timeout "$TIMEOUT" "./$EXECUTABLE"; then
-        log_success "Program executed successfully!"
+for ((i = 1; i <= NUM_TESTS; i++)); do
+    printf "Test %d/%d: " "$i" "$NUM_TESTS"
+
+    # Generate test case
+    if [ "$GENERATOR_TYPE" = "python" ]; then
+        if [ ! -f "$PYTHON_GENERATOR_SCRIPT" ]; then
+            log_info "Python generator script '$PYTHON_GENERATOR_SCRIPT' not found!"
+            log_info "Creating placeholder $PYTHON_GENERATOR_SCRIPT..."
+            
+            cat > "$PYTHON_GENERATOR_SCRIPT" << 'EOF'
+import random
+
+# Example: Generate a random number N
+# Modify this to generate input for your specific problem
+n = random.randint(1, 1000)
+print(n)
+
+# Example for a problem needing an array:
+# size = random.randint(1, 10)
+# print(size)
+# arr = [random.randint(1, 100) for _ in range(size)]
+# print(*arr)
+EOF
+        fi
+        
+        if ! python3 "$PYTHON_GENERATOR_SCRIPT" > "$INPUT_FILE" 2>/dev/null; then
+            log_error "Input generation failed!"
+            cleanup_files "failure"
+            exit 1
+        fi
     else
-        exit_code=$?
-        if [ $exit_code -eq 124 ]; then
-            log_error "Program timed out after ${TIMEOUT} seconds!"
-        else
-            log_error "Program failed with exit code: $exit_code"
-        fi
+        # Inline generator - generates a random number N between 1 and 1000
+        # TODO: Customize this inline generator for your problem
+        test_cases=$((RANDOM % 3 + 1))  # Random number of test cases (1-3)
+        {
+            echo "$test_cases"
+            for ((tc = 1; tc <= test_cases; tc++)); do
+                n=$((RANDOM % 1000 + 1))
+                echo "$n"
+            done
+        } > "$INPUT_FILE"
+    fi
+
+    # Run the main solution
+    if ! timeout 10 "./$EXECUTABLE_NAME" < "$INPUT_FILE" > "$OUTPUT_FILE" 2>/dev/null; then
+        log_error "Main solution runtime error!"
+        log_info "Input:"
+        cat "$INPUT_FILE"
+        cleanup_files "failure"
         exit 1
     fi
-else
-    # Test with input file
-    if [ ! -f "$INPUT_FILE" ]; then
-        log_error "Input file '$INPUT_FILE' not found."
-        exit 1
-    fi
-    
-    echo ""
-    echo "📝 Test: File Input"
-    echo "Input file: $INPUT_FILE"
-    
-    log_verbose "Input content:"
-    if [ "$VERBOSE" = true ]; then
-        cat "$INPUT_FILE" | sed 's/^/  /'
-    fi
-    
-    # Run program with input file
-    ACTUAL_OUTPUT_FILE="actual_output.tmp"
-    
-    if timeout "$TIMEOUT" "./$EXECUTABLE" < "$INPUT_FILE" > "$ACTUAL_OUTPUT_FILE" 2>&1; then
-        log_success "Program executed successfully!"
-        
-        echo ""
-        echo "📤 Program Output:"
-        cat "$ACTUAL_OUTPUT_FILE" | sed 's/^/  /'
-        
-        # Compare with expected output if provided
-        if [ -n "$EXPECTED_OUTPUT" ]; then
-            if [ ! -f "$EXPECTED_OUTPUT" ]; then
-                log_warning "Expected output file '$EXPECTED_OUTPUT' not found. Skipping comparison."
-            else
-                echo ""
-                echo "🔍 Comparing with expected output..."
-                
-                if diff -q "$ACTUAL_OUTPUT_FILE" "$EXPECTED_OUTPUT" > /dev/null; then
-                    log_success "Output matches expected result!"
-                else
-                    log_error "Output differs from expected result!"
-                    echo ""
-                    echo "Expected output:"
-                    cat "$EXPECTED_OUTPUT" | sed 's/^/  /'
-                    echo ""
-                    echo "Actual output:"
-                    cat "$ACTUAL_OUTPUT_FILE" | sed 's/^/  /'
-                    echo ""
-                    echo "Differences:"
-                    diff "$EXPECTED_OUTPUT" "$ACTUAL_OUTPUT_FILE" | sed 's/^/  /' || true
-                    
-                    # Cleanup temp file
-                    rm -f "$ACTUAL_OUTPUT_FILE"
-                    exit 1
-                fi
-            fi
+
+    # Run brute force comparison if enabled
+    if [ "$USE_BRUTE_FORCE_COMPARISON" = true ]; then
+        if ! timeout 10 "./$BRUTE_EXECUTABLE_NAME" < "$INPUT_FILE" > "$BRUTE_OUTPUT_FILE" 2>/dev/null; then
+            log_error "Brute force solution runtime error!"
+            log_info "Input:"
+            cat "$INPUT_FILE"
+            cleanup_files "failure"
+            exit 1
         fi
+
+        # Compare outputs
+        main_output=$(cat "$OUTPUT_FILE" | tr -d '\r' | sed 's/[[:space:]]*$//')
+        brute_output=$(cat "$BRUTE_OUTPUT_FILE" | tr -d '\r' | sed 's/[[:space:]]*$//')
         
-        # Cleanup temp file
-        rm -f "$ACTUAL_OUTPUT_FILE"
-        
-    else
-        exit_code=$?
-        if [ $exit_code -eq 124 ]; then
-            log_error "Program timed out after ${TIMEOUT} seconds!"
-        else
-            log_error "Program failed with exit code: $exit_code"
-            if [ -f "$ACTUAL_OUTPUT_FILE" ]; then
-                echo "Error output:"
-                cat "$ACTUAL_OUTPUT_FILE" | sed 's/^/  /'
-            fi
+        if [ "$main_output" != "$brute_output" ]; then
+            echo "FAILED"
+            log_error "Output mismatch!"
+            log_info "Input:"
+            cat "$INPUT_FILE"
+            log_info "Main solution output:"
+            echo "$main_output"
+            log_info "Brute force output:"
+            echo "$brute_output"
+            cleanup_files "failure"
+            exit 1
         fi
-        
-        # Cleanup temp file
-        rm -f "$ACTUAL_OUTPUT_FILE"
-        exit 1
     fi
-fi
+
+    echo "Passed."
+    ((PASSED_COUNT++))
+done
 
 echo ""
-log_success "All tests completed successfully! 🎉"
+log_info "All $PASSED_COUNT/$NUM_TESTS tests passed successfully!"
 
-# Performance info
-if [ "$VERBOSE" = true ]; then
-    echo ""
-    echo "📊 Performance Info:"
-    echo "  Executable size: $(du -h "$EXECUTABLE" 2>/dev/null | cut -f1 || echo "unknown")"
-    echo "  Compilation time: Fast ⚡"
-fi 
+# --- Cleanup ---
+cleanup_files "success"
+trap - EXIT  # Remove the trap since we're cleaning up manually
+
+exit 0 
