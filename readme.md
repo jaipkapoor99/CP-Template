@@ -15,6 +15,7 @@ CP-Template/
 │   ├── attach.ps1        # Combine files for submission
 │   ├── detach.ps1        # Separate combined files
 │   ├── test.ps1          # Stress testing with brute force
+│   ├── cleanup.ps1       # Clean up generated/temporary files
 │   └── generate_input.py # Test case generation
 ├── tests/                # Test files
 │   └── test_components.cpp # Component testing
@@ -55,6 +56,18 @@ echo "5" > ../input.txt
 .\detach.ps1
 ```
 
+### 4. **Clean Up Generated Files**
+```powershell
+# Remove all temporary/generated files (can run from anywhere)
+scripts\cleanup.ps1
+
+# Force cleanup without confirmations
+scripts\cleanup.ps1 -Force
+
+# Verbose output to see what's being cleaned
+scripts\cleanup.ps1 -Verbose
+```
+
 ## 🛠️ Key Features
 
 - **🏗️ Organized Structure**: Clean separation of source, headers, scripts, tests, and docs
@@ -77,6 +90,7 @@ For detailed documentation, examples, and usage guides, see:
 2. Use `scripts/test.ps1` for stress testing
 3. Use `scripts/attach.ps1` before submission
 4. Use `scripts/detach.ps1` to return to modular structure
+5. Use `scripts/cleanup.ps1` to clean up generated files
 
 ### **CodeRunner Configuration (Windows/MinGW)**
 ```json
