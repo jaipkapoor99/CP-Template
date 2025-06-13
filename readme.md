@@ -32,6 +32,9 @@ cd scripts
 
 # Compile and test (from scripts folder)
 g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL ../src/main.cpp -o ../my_solution
+
+# Create input.txt in root directory and run
+echo "5" > ../input.txt
 ../my_solution < ../input.txt
 
 # Run stress testing with brute force comparison
@@ -83,6 +86,11 @@ For detailed documentation, examples, and usage guides, see:
   }
 }
 ```
+
+**Note**: When using CodeRunner with the organized structure:
+- Place your `input.txt` in the same directory as the file you're running
+- For `src/main.cpp`, put `input.txt` in the `src/` folder
+- The output will be written to `output.txt` in the same directory
 
 ### **CPH (Competitive Programming Helper) Setup**
 1. Run `scripts/attach.ps1` to create single-file version
