@@ -1,14 +1,14 @@
 #ifndef DEBUG_UTILS_HPP
 #define DEBUG_UTILS_HPP
 
-#include <iostream>     // For std::cerr, std::ostream, std::endl
-#include <string>       // For std::string
-#include <vector>       // For std::vector (used in container output helper)
-#include <utility>      // For std::pair, std::forward
+#include <iostream>        // For std::cerr, std::ostream, std::endl
+#include <string>          // For std::string
+#include <vector>          // For std::vector (used in container output helper)
+#include <utility>         // For std::pair, std::forward
 #include <source_location> // For std::source_location
-#include <filesystem>   // For std::filesystem::path
-#include <algorithm>    // For std::max/min (not directly used here, but often useful), std::forward
-#include <type_traits>  // For std::enable_if, std::is_same
+#include <filesystem>      // For std::filesystem::path
+#include <algorithm>       // For std::max/min (not directly used here, but often useful), std::forward
+#include <type_traits>     // For std::enable_if, std::is_same
 
 // Define colors as empty strings by default or if LOCAL is not defined.
 // These will be overridden if LOCAL is defined.
@@ -29,22 +29,23 @@
 //  PRACTICE flag enables runtime asserts, tracing and brute solvers.
 #ifdef PRACTICE
 // ASSERT: crash-fast on invariants.
-#define ASSERT(cond, msg)                                                               \\\
-    if (!(cond))                                                                        \\\
-    {                                                                                   \\\
-        std::cerr << RED << "ASSERT FAIL @ "                                            \\\
-                  << std::filesystem::path(std::source_location::current().file_name())  \\\
-                         .filename().string()                                           \\\
-                  << ":" << std::source_location::current().line()                      \\\
-                  << " (\"" << std::source_location::current().function_name() << "\"): "   \\\
-                  << RESET << (msg) << RESET << std::endl;                              \\\
-        exit(42);                                                                       \\\
+#define ASSERT(cond, msg)                                                                 \
+    if (!(cond))                                                                          \
+    {                                                                                     \
+        std::cerr << RED << "ASSERT FAIL @ "                                              \
+                  << std::filesystem::path(std::source_location::current().file_name())   \
+                         .filename()                                                      \
+                         .string()                                                        \
+                  << ":" << std::source_location::current().line()                        \
+                  << " (\"" << std::source_location::current().function_name() << "\"): " \
+                  << RESET << (msg) << RESET << std::endl;                                \
+        exit(42);                                                                         \
     }
 
 // TRACE: handy logging for PRACTICE builds, toggle with -DLOCAL
 #ifdef LOCAL
 // Forward declaration for dbg, which is defined further down within the #ifdef LOCAL block
-template <typename... Args_dbg> 
+template <typename... Args_dbg>
 void dbg(const std::source_location loc, Args_dbg &&...args);
 
 #define TRACE(...) dbg(std::source_location::current(), __VA_ARGS__)
@@ -57,7 +58,6 @@ void dbg(const std::source_location loc, Args_dbg &&...args);
 #define TRACE(...) ((void)0)
 #endif // PRACTICE
 
-
 // ────────────── DEBUGGING (Color + Context) ────────────
 //  Use DEBUG(a,b,v) to print state with file/line, colored, local only.
 #ifdef LOCAL
@@ -66,10 +66,10 @@ void dbg(const std::source_location loc, Args_dbg &&...args);
 #undef RED
 #undef BLUE
 #undef GREEN
-#define RESET "\\033[0m"
-#define RED "\\033[31m"
-#define BLUE "\\033[34m"
-#define GREEN "\\033[32m"
+#define RESET "\033[0m"
+#define RED "\033[31m"
+#define BLUE "\033[34m"
+#define GREEN "\033[32m"
 
 // Helper for dbg to print pairs
 template <typename A, typename B>
@@ -121,4 +121,4 @@ void dbg(const std::source_location loc, Args_dbg &&...args)
 
 #endif // LOCAL for DEBUG and actual color definitions
 
-#endif // DEBUG_UTILS_HPP 
+#endif // DEBUG_UTILS_HPP
