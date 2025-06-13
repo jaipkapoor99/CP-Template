@@ -15,7 +15,7 @@ $SOURCE_FILE = "main.cpp"
 $EXECUTABLE_NAME = "my_solution"
 $INPUT_FILE = "input.txt"
 $OUTPUT_FILE = "output.txt"
-$BRUTE_OUTPUT_FILE = "brute_output.txt" # If using a separate brute force solution
+# $BRUTE_OUTPUT_FILE = "brute_output.txt" # Only used in commented code sections
 
 # Test case generator configuration
 $GENERATOR_TYPE = "inline" # "inline" or "python"
