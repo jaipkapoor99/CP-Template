@@ -7,7 +7,7 @@ This template provides a robust starting point for C++20 competitive programming
 - `main.cpp`: Contains your `main()` and `solve()` functions. This is the primary file you'll edit for each problem. It includes `cp_utils.hpp`.
 - `cp_utils.hpp`: A comprehensive header with type aliases, constants, macros, modular arithmetic, timer, utility functions (including `solve_brute_example`), number theory helpers, and generic I/O. It includes `debug_utils.hpp`.
 - `debug_utils.hpp`: Provides debugging macros like `DEBUG(...)`, `ASSERT(...)`, and `TRACE(...)` with color-coded output and source location info.
-- `test.sh`: Script for stress testing your solution in `main.cpp` against generated inputs or a brute-force solution.
+- `test.ps1`: PowerShell script for stress testing your solution in `main.cpp` against generated inputs and a brute-force solution (`brute.cpp`).
 - `attach.sh`: Script to bundle `cp_utils.hpp` (and `debug_utils.hpp`) directly into `main.cpp` by replacing the `#include "cp_utils.hpp"` line. The original `main.cpp` is overwritten. This is primarily for compatibility with tools like CPH (Competitive Programming Helper) that expect a single file.
 - `detach.sh`: Script to reverse the `attach.sh` operation. It extracts `cp_utils.hpp` and `debug_utils.hpp` from the combined `main.cpp` using embedded markers, restoring the original modular structure.
 - `generate_input.py` (Optional): Example Python script for generating test inputs for `test.sh`.
@@ -89,11 +89,11 @@ This template provides a robust starting point for C++20 competitive programming
     ./my < input.txt
     ```
 4.  **Stress Testing (Modular Structure):**
-    ```bash
-    # Ensure files are detached: ./detach.sh main.cpp
-    # Compile for stress testing (asserts active, less spam)
-    g++ -std=c++20 -O2 -Wall -DPRACTICE main.cpp -o my_solution # test.sh uses my_solution by default
-    ./test.sh <num_tests_optional>
+    ```powershell
+    # Ensure files are detached: .\detach.ps1 main.cpp
+    # Create brute.cpp with your brute force solution (template will be auto-generated)
+    # Run stress testing with brute force comparison
+    .\test.ps1 <num_tests_optional>
     ```
 
 -
