@@ -1,5 +1,4 @@
 import random
-import sys
 
 # -----------------------------------------------------------------------------
 # Test Case Generation Logic

@@ -75,6 +75,7 @@ This template provides a robust starting point for C++20 competitive programming
 - **Test Case Handling:** Standard `main` function reads `t` and calls `solve()` for each test case.
 - **Macro Integration:** Utility functions and data structures in `cp_utils.hpp` refactored to use predefined macros like `f`, `cf`, `forV`, `sz`, `pb`, `eb`, `fi`, `se`, `all`, `rall` where appropriate.
 - **Code Quality:** Consistent use of `emplace_back` over `push_back` for object construction, optimized floating-point comparisons, and enhanced error handling.
+- **Test Case Generation:** `generate_input.py` script for creating random test cases during stress testing, easily customizable for different problem types.
 
 ## How to Use
 
@@ -94,6 +95,22 @@ This template provides a robust starting point for C++20 competitive programming
     g++ -std=c++20 -O2 -Wall -DPRACTICE main.cpp -o my_solution # test.sh uses my_solution by default
     ./test.sh <num_tests_optional>
     ```
+
+-
+- **Customizing Test Case Generation:**
+- The `generate_input.py` script is used by `test.sh` to create random test cases. Modify the `generate_case()` function in `generate_input.py` to match your problem's input format:
+- ```python
+
+  ```
+- # Example: Generate N followed by N random numbers
+- n = random.randint(1, 10)
+- print(n)
+- arr = [random.randint(1, 100) for _ in range(n)]
+- print(\*arr)
+- ```
+
+  ```
+
 5.  **Prepare for Submission / CPH Tool Usage (Attached File):**
     ```bash
     ./attach.sh main.cpp
