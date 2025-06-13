@@ -1,12 +1,29 @@
-.vscode
+# Ignore all files in root directory except .gitignore and README.md
+/*
+!/.gitignore
+!/README.md
+!/src/
+!/include/
+!/scripts/
+!/tests/
+!/docs/
+
+# Build artifacts
 *.exe
 *.o
 *.obj
+
+# Temporary files
 *.txt
+tempCodeRunnerFile.cpp
+
+# Python cache
 __pycache__/
 *.pyc
 *.pyo
-tempCodeRunnerFile.cpp
+
+# IDE/Editor files
+.vscode/
 
 # CPH specific files
 .cph/
