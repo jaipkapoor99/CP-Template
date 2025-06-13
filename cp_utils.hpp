@@ -127,7 +127,7 @@ using Mint1 = ModularOps<MOD1_CONST>;
 #define all(v) (v).begin(), (v).end()
 #define rall(v) (v).rbegin(), (v).rend()
 #define sz(v) ((ll)(v).size())
-#define pb push_back
+#define pb emplace_back
 #define eb emplace_back
 #define fi first
 #define se second

@@ -31,7 +31,7 @@ This template provides a robust starting point for C++20 competitive programming
 - **Comprehensive Utilities (in `cp_utils.hpp`):**
   - Type Aliases: `ll`, `vll`, `pii`, `Mint`, `os` (PBDS order statistic tree), etc.
   - Constants: `MOD_CONST`, `MOD1_CONST`, `INF`, `PI`, `EPS`, etc.
-  - Macros: For loops (`f`, `cf`, `rf`, `forV`), vector ops (`all`, `rall`, `sz`, `pb`, `eb`), pair access (`fi`, `se`), I/O shortcuts (`YES`/`NO`, `NL`, `SPACE`), `UNIQUE`.
+  - Macros: For loops (`f`, `cf`, `rf`, `forV`), vector ops (`all`, `rall`, `sz`, `pb` (alias for `emplace_back`), `eb`), pair access (`fi`, `se`), I/O shortcuts (`YES`/`NO`, `NL`, `SPACE`), `UNIQUE`.
   - Modular Arithmetic: `ModularOps` struct (templated by modulus) for `add`, `sub`, `mul`, `power`, `inv`, `div`. Aliases `Mint` and `Mint1`.
   - Timer: `Timer` class for performance measurement.
   - Utility Functions: Variadic `maximise`, `minimise`.
