@@ -1,117 +1,127 @@
 # Universal C++20 Competitive Programming Template
 
-A comprehensive, cross-platform competitive programming template with modular design and support for both Windows (PowerShell) and Unix-like systems (Bash).
+A comprehensive, cross-platform competitive programming template with **enhanced colorful debug system**, C++20 compatibility, and modular design supporting both Windows (PowerShell) and Unix-like systems (Bash).
+
+## 🌟 What's New
+
+- **🎨 Enhanced Colorful Debug System**: Beautiful terminal output with vibrant colors, emojis, and professional formatting
+- **⚡ C++20 Compatibility**: Smart header inclusion with fallbacks for older compilers
+- **🎯 Visual Debugging**: Progress tracking, performance timing, and enhanced assertions
+- **📊 Rich Data Visualization**: Beautiful formatting for containers, pairs, and complex data structures
+- **🧪 Enhanced Testing**: Comprehensive debug features for algorithm development and verification
 
 ## 📁 Project Structure
 
 ```
 CP-Template/
-├── main.cpp              # Main solution file (root level for easy access)
-├── src/                  # Additional source files (if needed)
-├── include/              # Header files
-│   ├── cp_utils.hpp      # Core utilities and algorithms
-│   └── debug_utils.hpp   # Debug macros and utilities
-├── scripts/              # Automation scripts
-│   ├── common/           # Cross-platform wrapper scripts
-│   │   ├── attach        # Cross-platform attach wrapper
-│   │   ├── detach        # Cross-platform detach wrapper
-│   │   ├── cleanup       # Cross-platform cleanup wrapper
-│   │   └── test          # Cross-platform test wrapper
-│   ├── windows/          # Windows-specific scripts (PowerShell)
-│   │   ├── attach.ps1    # Combine files for submission
-│   │   ├── detach.ps1    # Separate combined files
-│   │   ├── test.ps1      # Stress testing with brute force
-│   │   └── cleanup.ps1   # Clean up generated/temporary files
-│   ├── unix/             # Unix-specific scripts (Bash)
-│   │   ├── attach.sh     # Combine files for submission
-│   │   ├── detach.sh     # Separate combined files
-│   │   ├── test.sh       # Stress testing with brute force
-│   │   └── cleanup.sh    # Clean up generated/temporary files
-│   └── generate_input.py # Test case generation
-├── tests/                # Test files
-│   └── test_components.cpp # Component testing
-├── docs/                 # Documentation
-│   └── readme.md         # Detailed documentation
-└── .gitignore           # Git ignore rules
+├── main.cpp                      # Main solution file with colorful debug integration
+├── demo_colorful_debug.cpp       # Comprehensive demonstration of debug features
+├── src/                          # Additional source files (if needed)
+├── include/                      # Header files
+│   ├── cp_utils.hpp             # Core utilities with C++20 compatibility
+│   └── debug_utils.hpp          # Enhanced colorful debug system
+├── scripts/                     # Automation scripts
+│   ├── common/                  # Cross-platform wrapper scripts
+│   │   ├── attach               # Cross-platform attach wrapper
+│   │   ├── detach               # Cross-platform detach wrapper
+│   │   ├── cleanup              # Cross-platform cleanup wrapper
+│   │   └── test                 # Cross-platform test wrapper
+│   ├── windows/                 # Windows-specific scripts (PowerShell)
+│   ├── unix/                    # Unix-specific scripts (Bash)
+│   └── generate_input.py        # Test case generation
+├── tests/                       # Test files
+│   └── test_components.cpp      # Component testing with colorful debug examples
+├── docs/                        # Documentation
+│   └── readme.md                # Detailed documentation
+├── COLORFUL_DEBUG_FEATURES.md   # Enhanced debug system documentation
+└── .gitignore                   # Git ignore rules
 ```
 
 ## 🚀 Quick Start
 
-### 1. **Local Development & Testing**
+### 1. **Development & Testing** (Enhanced Debug Mode)
 
 ```bash
-# Navigate to scripts directory
-cd scripts
+# Full debug mode with colorful output and all features
+g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL main.cpp -o solution
 
-# Compile and test (from project root)
-g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL main.cpp -o my_solution
-
-# Create input.txt in root directory and run
+# Create input.txt and run with beautiful debug output
 echo "5" > input.txt
-./my_solution < input.txt
-
-# Run stress testing with brute force comparison (cross-platform)
-./common/test 50
+./solution < input.txt
 ```
 
-### 2. **For Submission/CPH Tools**
+### 2. **Practice Mode** (Assertions Only)
 
 ```bash
-# From project root - modifies main.cpp in-place (cross-platform)
-scripts/common/attach
-
-# Or specify a different file
-scripts/common/attach solution.cpp
-
-# From scripts/ directory - specify target file
-cd scripts
-./common/attach ../main.cpp
+# Practice mode with assertions but no visual debug output
+g++ -std=c++20 -O2 -Wall -DPRACTICE main.cpp -o solution
+./solution < input.txt
 ```
 
-### 3. **Return to Modular Structure**
+### 3. **Contest Mode** (Zero Overhead)
 
 ```bash
-# From project root - modifies main.cpp in-place (cross-platform)
-scripts/common/detach
-
-# Or specify a different file
-scripts/common/detach solution.cpp
-
-# From scripts/ directory - specify target file
-cd scripts
-./common/detach ../main.cpp
+# Contest submission mode - all debug macros become no-ops
+g++ -std=c++20 -O2 -Wall main.cpp -o solution
+./solution < input.txt
 ```
 
-### 4. **Clean Up Generated Files**
+### 4. **Try the Demo**
 
 ```bash
-# Remove all temporary/generated files (can run from anywhere, cross-platform)
-scripts/common/cleanup
-
-# Force cleanup without confirmations
-scripts/common/cleanup --force
-
-# Verbose output to see what's being cleaned
-scripts/common/cleanup --verbose
+# Compile and run the comprehensive demo
+g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL demo_colorful_debug.cpp -o demo
+./demo
 ```
+
+## 🎨 Enhanced Debug Features
+
+### **Visual Debug Output**
+
+- 🐛 **DEBUG()**: Beautiful boxed output with timestamps and location info
+- ✅ **SUCCESS()**: Green success messages with checkmarks
+- ⚠️ **WARNING()**: Yellow warning messages
+- ℹ️ **INFO()**: Blue informational messages
+- 💥 **Enhanced ASSERT()**: Dramatic visual failure display
+
+### **Performance & Progress**
+
+- ⏱️ **TIMER_START/END()**: Microsecond precision timing
+- 📈 **PROGRESS()**: Visual progress bars with percentages
+- 🔍 **TRACE()**: Lightweight logging for algorithm flow
+
+### **Visual Organization**
+
+- 🏷️ **DEBUG_SECTION()**: Beautiful section separators
+- 📊 **Container visualization**: Colorful formatting for vectors, maps, pairs
+- 🎯 **Test framework**: TEST_PASS/FAIL with visual feedback
+
+### **Build Modes**
+
+| Mode           | Flags                | Features                                    |
+| -------------- | -------------------- | ------------------------------------------- |
+| **Full Debug** | `-DPRACTICE -DLOCAL` | All debug features, colorful output, timing |
+| **Practice**   | `-DPRACTICE`         | Assertions and checks, no visual output     |
+| **Contest**    | No flags             | Zero overhead, all macros become no-ops     |
 
 ## 🛠️ Key Features
 
-- **🏗️ Organized Structure**: Clean separation of source, headers, scripts, tests, and docs
-- **🔧 Modular Design**: Easy to maintain and extend
-- **🧪 Comprehensive Testing**: Advanced stress testing with brute force comparison
-- **🤖 Auto-Generated Templates**: Automatically creates brute force solution templates
-- **📊 Smart Test Generation**: Inline and Python-based random test case generation
-- **📝 Rich Documentation**: Detailed examples and usage guides
-- **🌐 Cross-Platform**: Works on Windows (PowerShell), Linux, macOS, and WSL
-- **🖥️ Smart Platform Detection**: Automatically uses the right scripts for your environment
-- **⚡ Modern C++20**: Latest language features and optimizations
+- **🏗️ C++20 Compatible**: Smart header inclusion with automatic fallbacks
+- **🎨 Enhanced Debug System**: Professional-grade colorful debugging experience
+- **🔧 Modular Design**: Clean separation with easy attach/detach for submissions
+- **🧪 Comprehensive Testing**: Advanced stress testing with visual feedback
+- **🌐 Cross-Platform**: Works on Windows, Linux, macOS, and WSL
+- **📊 Rich Data Structures**: DSU, Segment Tree, Fenwick Tree, and more
+- **⚡ Performance Optimized**: Zero overhead in contest mode
+- **🎯 Algorithm Library**: Graph algorithms, string processing, geometry, number theory
 
 ## 📖 Documentation
 
-For detailed documentation, examples, and usage guides, see:
+For detailed information and examples:
 
-- **[Complete Documentation](docs/readme.md)** - Comprehensive guide with examples
+- **[Enhanced Debug Features](COLORFUL_DEBUG_FEATURES.md)** - Complete guide to the colorful debug system
+- **[Complete Documentation](docs/readme.md)** - Comprehensive usage guide
+- **[Demo Program](demo_colorful_debug.cpp)** - Live demonstration of all features
 - **[Component Tests](tests/test_components.cpp)** - Usage examples for all utilities
 
 ## 🎯 Usage Patterns
@@ -286,3 +296,46 @@ scripts/common/test -n 50 --no-brute
 ---
 
 **Happy Competitive Programming! 🏆**
+
+### **Enhanced Debug Integration**
+
+The template now includes a professional-grade debug system:
+
+```cpp
+void solve() {
+    DEBUG_SECTION("🎯 SOLVING PROBLEM");
+    DEBUG_FUNC();
+
+    int n;
+    read(n);
+    DEBUG_VAR(n);
+
+    if (n > 1000) {
+        WARNING("Large input detected");
+    }
+
+    TIMER_START(algorithm);
+    vector<int> result = calculate_answer(n);
+    TIMER_END(algorithm);
+
+    DEBUG("Computed result:", result);
+    SUCCESS("Solution completed!");
+}
+```
+
+### **CodeRunner Configuration (Enhanced)**
+
+```json
+{
+  "code-runner.executorMap": {
+    "cpp": "g++ -std=c++20 -Wall -O2 -DPRACTICE -DLOCAL $fileName -o $fileNameWithoutExt.exe; if ($?) { Get-Content input.txt | ./$fileNameWithoutExt.exe > output.txt }"
+  }
+}
+```
+
+**Enhanced Features:**
+
+- Beautiful colored debug output in terminal
+- Professional formatting with timestamps and location info
+- Visual progress tracking and performance timing
+- Zero impact on contest submissions

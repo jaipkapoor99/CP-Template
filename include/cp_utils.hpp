@@ -1,20 +1,115 @@
 #ifndef CP_UTILS_HPP
 #define CP_UTILS_HPP
 
+// ──────────────────── C++20 COMPATIBILITY CHECK ─────────────────────
+#if __cplusplus < 202002L
+#warning "This code is designed for C++20. Some features may not work correctly with older standards."
+#endif
+
+// ──────────────────── HEADER INCLUDES ─────────────────────
+// Use bits/stdc++.h for competitive programming if available (GCC/Clang with libstdc++)
+// Otherwise fall back to individual standard library includes
+#if __has_include(<bits/stdc++.h>) && !defined(NO_BITS_STDC)
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp> // For PBDS
-#include <ext/pb_ds/tree_policy.hpp>     // For PBDS
+#else
+// Individual includes for portability
+#include <algorithm>
+#include <array>
+#include <bitset>
+#include <cassert>
+#include <cctype>
+#include <cerrno>
+#include <cfloat>
+#include <climits>
+#include <clocale>
+#include <cmath>
+#include <complex>
+#include <csetjmp>
+#include <csignal>
+#include <cstdarg>
+#include <cstddef>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <cwchar>
+#include <cwctype>
+#include <deque>
+#include <exception>
+#include <fstream>
+#include <functional>
+#include <iomanip>
+#include <ios>
+#include <iosfwd>
+#include <iostream>
+#include <istream>
+#include <iterator>
+#include <limits>
+#include <list>
+#include <locale>
+#include <map>
+#include <memory>
+#include <new>
+#include <numeric>
+#include <ostream>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <stdexcept>
+#include <streambuf>
+#include <string>
+#include <typeinfo>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
+#include <valarray>
+#include <vector>
+#endif
+
+// C++20 specific headers (always try to include if available)
+#if __cplusplus >= 202002L
+#if __has_include(<ranges>)
 #include <ranges>
+#endif
+#if __has_include(<bit>)
 #include <bit>
+#endif
+#if __has_include(<span>)
 #include <span>
+#endif
+#if __has_include(<concepts>)
+#include <concepts>
+#endif
+#if __has_include(<compare>)
+#include <compare>
+#endif
+#if __has_include(<format>)
+#include <format>
+#define HAS_FORMAT_LIB
+#endif
+#if __has_include(<numbers>)
+#include <numbers>
+#endif
+#endif
+
+// Always include these for competitive programming
 #include <chrono>
 #include <random>
-#include <numbers> // For std::numbers::pi, ensure fallback if not C++20
+
+// GNU PBDS (Policy-Based Data Structures) - only include if available
+#if __has_include(<ext/pb_ds/assoc_container.hpp>)
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#define HAS_GNU_PBDS
+#endif
 
 #include "debug_utils.hpp" // Include the debug header
 
 using namespace std;
+#ifdef HAS_GNU_PBDS
 using namespace __gnu_pbds;
+#endif
 
 // ──────────────────── TYPE ALIASES ─────────────────────
 //  Core types for rapid typing and template-based DS.
@@ -36,14 +131,16 @@ template <typename T>
 using pqg = std::priority_queue<T, vector<T>, greater<T>>;
 template <typename T>
 using pql = std::priority_queue<T>;
+#ifdef HAS_GNU_PBDS
 template <typename T>
 using os = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 template <typename K, typename V>
 using omap = tree<K, V, less<K>, rb_tree_tag, tree_order_statistics_node_update>;
+#endif
 template <typename T>
-using uset = unordered_set<T>;
+using uset = std::unordered_set<T>;
 template <typename K, typename V>
-using umap = unordered_map<K, V>;
+using umap = std::unordered_map<K, V>;
 
 // ──────────────────── CONSTANTS ────────────────────────
 constexpr int MOD_CONST = 1'000'000'007; // Renamed to avoid conflict if MOD is a macro elsewhere
@@ -52,7 +149,7 @@ constexpr int MOD1_CONST = 998'244'353;  // Renamed
 #define NL '\n' // Corrected from ' ' to '\n'
 constexpr double EPS = 1e-9;
 
-#if __cplusplus >= 202002L && defined(__cpp_lib_numbers)
+#if __cplusplus >= 202002L && __has_include(<numbers>)
 constexpr double PI = std::numbers::pi;
 #else
 constexpr double PI = 3.14159265358979323846;
@@ -152,6 +249,21 @@ public:
 };
 
 // ───────────────── UTILITY FUNCTIONS ────────────────────
+#if __cplusplus >= 202002L
+template <typename T_ref, typename... T_vals>
+    requires (std::same_as<T_ref, T_vals> && ...)
+void maximise(T_ref &target, const T_vals &...vals)
+{
+    ((void)(target = std::max(target, vals)), ...);
+}
+
+template <typename T_ref, typename... T_vals>
+    requires (std::same_as<T_ref, T_vals> && ...)
+void minimise(T_ref &target, const T_vals &...vals)
+{
+    ((void)(target = std::min(target, vals)), ...);
+}
+#else
 template <typename T_ref, typename... T_vals>
 void maximise(T_ref &target, const T_vals &...vals)
 {
@@ -163,6 +275,7 @@ void minimise(T_ref &target, const T_vals &...vals)
 {
     ((void)(target = std::min(target, vals)), ...);
 }
+#endif
 
 // ───────────────── DATA STRUCTURES ────────────────────
 // Disjoint Set Union (DSU) / Union-Find
@@ -1118,6 +1231,23 @@ struct Sieve
     }
 };
 
+#if __cplusplus >= 202002L
+template <std::integral T1, std::integral T2>
+constexpr bool isDivisible(T1 n, T2 divisor)
+{
+    if (divisor == 0)
+    {
+        return false;
+    }
+    return (n % divisor == 0);
+}
+
+template <std::integral T>
+constexpr bool isOdd(T n)
+{
+    return !isDivisible(n, 2);
+}
+#else
 template <typename T1, typename T2>
 constexpr bool isDivisible(T1 n, T2 divisor)
 {
@@ -1133,6 +1263,7 @@ constexpr bool isOdd(T n)
 {
     return !isDivisible(n, 2);
 }
+#endif
 
 // ──────────────── LINEAR ALGEBRA UTILITIES ───────────────
 
@@ -1332,9 +1463,13 @@ void read(T &first, Args &...args)
 template <typename T>
 void read(vector<T> &v)
 {
+#if __cplusplus >= 202002L
+    for (auto &element : v)
+        cin >> element;
+#else
     forV(v) // Already uses forV
-        cin >>
-        e;
+        cin >> e;
+#endif
 }
 
 template <typename T, typename... Args>
@@ -1348,9 +1483,13 @@ void print(const T &first, const Args &...args)
 template <typename T>
 void printv(const vector<T> &v)
 {
+#if __cplusplus >= 202002L
+    for (const auto &element : v)
+        cout << element << SPACE;
+#else
     forV(v) // Already uses forV
-        cout
-        << e << SPACE;
+        cout << e << SPACE;
+#endif
     cout << NL;
 }
 
