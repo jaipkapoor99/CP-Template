@@ -1,15 +1,15 @@
 /*
-  Jai Kapoor – Universal C++20 Competitive Programming Template
+  Jai Kapoor – Universal C++23 Competitive Programming Template
   Full support for PRACTICE mode, DEBUG color, brute-force helpers, and stress testing.
 
   ───── Build Modes ─────
   - PRACTICE + LOCAL: Full power (DEBUG/TRACE/ASSERT/brute)
-      g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL main.cpp -o my
+      g++ -std=c++23 -O2 -Wall -DPRACTICE -DLOCAL main.cpp -o my
       (Compiler implicitly finds cp_utils.hpp and debug_utils.hpp via includes)
   - PRACTICE only: Stress testing (brute, ASSERT, no debug spam)
-      g++ -std=c++20 -O2 -Wall -DPRACTICE main.cpp -o my
+      g++ -std=c++23 -O2 -Wall -DPRACTICE main.cpp -o my
   - Contest: Lean, safe for submission (use combined file from ./combine.sh)
-      g++ -std=c++20 -O2 -Wall -DONLINE_JUDGE submission_main.cpp -o submit
+      g++ -std=c++23 -O2 -Wall -DONLINE_JUDGE submission_main.cpp -o submit
 */
 
 #include "../include/cp_utils.hpp" // Core utilities, macros, and type aliases
@@ -70,12 +70,12 @@ HOW TO USE THIS TEMPLATE
 - `test.sh`: Script for stress testing `main.cpp`.
 
 **For local debugging (full features):**
-    g++ -std=c++20 -O2 -Wall -DPRACTICE -DLOCAL main.cpp -o my 
+    g++ -std=c++23 -O2 -Wall -DPRACTICE -DLOCAL main.cpp -o my 
     (Compiler implicitly finds cp_utils.hpp and debug_utils.hpp via includes in main.cpp)
     ./my < input.txt
 
 **For stress testing (assert/brute only, no debug spam):**
-    g++ -std=c++20 -O2 -Wall -DPRACTICE main.cpp -o my
+    g++ -std=c++23 -O2 -Wall -DPRACTICE main.cpp -o my
     ./test.sh   # (or ./test.sh <num_tests>)
 
 **To generate a single file for submission (e.g., submission_main.cpp):**
@@ -85,7 +85,7 @@ HOW TO USE THIS TEMPLATE
      includes debug_utils.hpp, all necessary code gets bundled.)
 
 **For contest/online judge (using the combined submission_main.cpp):**
-    g++ -std=c++20 -O2 -Wall -DONLINE_JUDGE submission_main.cpp -o submit
+    g++ -std=c++23 -O2 -Wall -DONLINE_JUDGE submission_main.cpp -o submit
 
 **Using with Competitive Programming Helper (CPH) like extensions:**
     Configure CPH to use `main.cpp` as the main file. 
@@ -93,7 +93,7 @@ HOW TO USE THIS TEMPLATE
 
 **Using with CodeRunner (Windows/MinGW):**
     Configure CodeRunner with the following command:
-    g++ -std=c++20 -Wall -O2 -DPRACTICE -DLOCAL $fileName -o $fileNameWithoutExt.exe; if ($?) { Get-Content input.txt | ./$fileNameWithoutExt.exe > output.txt }
+    g++ -std=c++23 -Wall -O2 -DPRACTICE -DLOCAL $fileName -o $fileNameWithoutExt.exe; if ($?) { Get-Content input.txt | ./$fileNameWithoutExt.exe > output.txt }
     
     This will:
     - Compile with full debug/practice features enabled
@@ -103,7 +103,7 @@ HOW TO USE THIS TEMPLATE
 
 ─────────────────────────────────────────────────────────────
 Features:
-- Modern C++20.
+- Modern C++23.
 - Modular Design: 
     - `main.cpp` for problem logic.
     - `cp_utils.hpp` for general CP utilities.

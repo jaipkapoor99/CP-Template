@@ -1,9 +1,9 @@
 #ifndef CP_UTILS_HPP
 #define CP_UTILS_HPP
 
-// ──────────────────── C++20 COMPATIBILITY CHECK ─────────────────────
-#if __cplusplus < 202002L
-#warning "This code is designed for C++20. Some features may not work correctly with older standards."
+// ──────────────────── C++23 COMPATIBILITY CHECK ─────────────────────
+#if __cplusplus < 202302L
+#warning "This code is designed for C++23. Some features may not work correctly with older standards."
 #endif
 
 // ──────────────────── HEADER INCLUDES ─────────────────────
@@ -67,7 +67,7 @@
 #include <vector>
 #endif
 
-// C++20 specific headers (always try to include if available)
+// C++23 specific headers (always try to include if available)
 #if __cplusplus >= 202002L
 #if __has_include(<ranges>)
 #include <ranges>

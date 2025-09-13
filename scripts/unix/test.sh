@@ -8,7 +8,7 @@ set -e  # Exit on any error
 # --- Default Configuration ---
 NUM_TESTS=100
 COMPILER="g++"
-STD_VERSION="c++20"
+STD_VERSION="c++23"
 OPTIMIZATION_LEVEL="-O2"
 WARNING_FLAGS="-Wall"
 PRACTICE_DEFINE="-DPRACTICE"  # Enables asserts and internal brute-force checks
