@@ -21,12 +21,10 @@ CP-Template/
 │   ├── cp_utils.hpp             # Core utilities with C++23 compatibility
 │   └── debug_utils.hpp          # Enhanced colorful debug system
 ├── scripts/                     # Automation scripts
-│   ├── common/                  # Cross-platform wrapper scripts
-│   │   ├── attach               # Cross-platform attach wrapper
-│   │   ├── detach               # Cross-platform detach wrapper
-│   │   ├── cleanup              # Cross-platform cleanup wrapper
-│   │   └── test                 # Cross-platform test wrapper
-│   └── unix/                    # Unix-specific scripts (Bash)
+│   ├── attach.sh                # Attach script
+│   ├── cleanup.sh               # Cleanup script
+│   ├── detach.sh                # Detach script
+│   ├── test.sh                  # Test script
 │   └── generate_input.py        # Test case generation
 ├── tests/                       # Test files
 │   └── test_components.cpp      # Component testing with colorful debug examples
@@ -128,39 +126,43 @@ For detailed information and examples:
 ### **Development Workflow**
 
 1. Edit `main.cpp` for your solution (now in root directory)
-2. Use `scripts/common/test` for stress testing (cross-platform)
-3. Use `scripts/common/attach` before submission
-4. Use `scripts/common/detach` to return to modular structure
-5. Use `scripts/common/cleanup` to clean up generated files
+2. Use `scripts/test` for stress testing
+3. Use `scripts/attach` before submission
+4. Use `scripts/detach` to return to modular structure
+5. Use `scripts/cleanup` to clean up generated files
 
 ### **CPH (Competitive Programming Helper) Setup**
 
-1. Run `scripts/common/attach` to create single-file version (cross-platform)
+1. Run `scripts/attach` to create single-file version
 2. Configure CPH to use the combined `main.cpp`
-3. Use `scripts/common/detach` when returning to development
+3. Use `scripts/detach` when returning to development
 
 ## 🌐 Platform-Specific Usage
 
-The template automatically detects your platform and uses the appropriate scripts:
-
-### **Cross-Platform Wrappers** (Recommended)
-
-```bash
-# These work on all platforms
-./scripts/common/attach
-./scripts/common/detach
-./scripts/common/cleanup
-./scripts/common/test
-```
-
 ### **WSL (Windows Subsystem for Linux) Usage**
 
-When using WSL, you should use the Unix-like scripts. Ensure you are in the project root directory within your WSL terminal.
+When using WSL, you can use the template as if you were on a native Linux environment. The scripts are compatible with WSL.
+
+**Key Considerations:**
+
+- **File Paths**: Ensure you are operating within the `/mnt/c/...` path if your project is on the Windows filesystem, or directly within the Linux filesystem if the project is cloned there.
+- **Compiler**: Install a C++ compiler (e.g., `g++`) within your WSL distribution.
+- **Script Execution**: Use the provided scripts directly.
+
+**Example Usage in WSL:**
 
 ```bash
-# Inside WSL terminal
-./scripts/unix/attach.sh
-./scripts/unix/detach.sh
+# Navigate to your project directory in WSL
+cd /home/your_user/CP-Template
+
+# Use the attach script
+./scripts/attach.sh
+
+# Compile your solution
+g++ -std=c++23 -O2 -Wall -DPRACTICE -DLOCAL main.cpp -o solution
+
+# Run tests
+./scripts/test.sh
 ```
 
 ## 🧪 Advanced Testing Features
@@ -171,22 +173,22 @@ The template includes comprehensive stress testing capabilities:
 
 ```bash
 # Run 100 stress tests (default)
-scripts/common/test
+scripts/test.sh
 
 # Run custom number of tests
-scripts/common/test -n 50
+scripts/test.sh -n 50
 
 # Disable brute force comparison (use internal asserts only)
-scripts/common/test --no-brute -n 200
+scripts/test.sh --no-brute -n 200
 
 # Use Python script for test generation
-scripts/common/test --python-gen
+scripts/test.sh --python-gen
 
 # Keep test files on failure for debugging
-scripts/common/test --keep-files
+scripts/test.sh --keep-files
 
 # Enable verbose output
-scripts/common/test -v
+scripts/test.sh -v
 ```
 
 ### **How Stress Testing Works**
@@ -251,10 +253,10 @@ int main() {
 
 ```bash
 # Unix-like (Bash)
-scripts/unix/test.sh -n 50 --no-brute
+scripts/test.sh -n 50 --no-brute
 
 # Cross-platform (Recommended)
-scripts/common/test -n 50 --no-brute
+scripts/test.sh -n 50 --no-brute
 ```
 
 ## 🔧 Customization
